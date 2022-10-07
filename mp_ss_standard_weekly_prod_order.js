@@ -64,6 +64,11 @@ function main() {
         var cust_prod_stock_status = searchResult.getValue(
             "custrecord_cust_prod_stock_status")
 
+        var week_of_usage = searchResult.getValue(
+            "formuladate");
+
+        nlapiLogExecution('DEBUG', 'week_of_usage', week_of_usage);
+
 
         var z1 = cust_prod_date_stock_used.split('/');
         var date = (parseInt(z1[0]) < 10 ? '0' : '') + parseInt(z1[0]);
@@ -94,7 +99,6 @@ function main() {
                 }
             }
 
-
             /**
              * Create Product Order
              */
@@ -116,6 +120,24 @@ function main() {
             product_order_rec.setFieldValue('custrecord_fuel_surcharge_applied',
                 1);
             product_order_id = nlapiSubmitRecord(product_order_rec);
+
+
+            /**
+             * Update Customer record
+             */
+            var customer_record = nlapiLoadRecord(
+                'customer', cust_prod_customer);
+            if (isNullorEmpty(customer_record.getFieldValue(
+                'custentity_mp_std_date_first_usage'))) {
+                customer_record.setFieldValue(
+                    'custentity_mp_std_date_first_usage', week_of_usage);
+            }
+            var weeks_used = customer_record.getFieldValue(
+                'custentity_mp_std_weeks_used');
+            weeks_used = weeks_used + 1;
+            customer_record.setFieldValue(
+                'custentity_mp_std_weeks_used', weeks_used);
+            nlapiSubmitRecord(customer_record);
 
             /**
              * Create Line Items associated to the product order.
@@ -209,20 +231,9 @@ function main() {
         return true;
     });
 
-    // nlapiLogExecution('DEBUG', 'count', count);
-    // nlapiLogExecution('DEBUG', 'jobs_5_less_parcel', jobs_5_less_parcel);
-    // nlapiLogExecution('DEBUG', 'total_parcel_count_jobs_5_less_parcel',
-    //   total_parcel_count_jobs_5_less_parcel);
-    // nlapiLogExecution('DEBUG', 'jobs_count_6_more_parcels',
-    //   jobs_count_6_more_parcels);
-    // nlapiLogExecution('DEBUG', 'total_parcel_count_jobs_6_more_parcels',
-    //   total_parcel_count_jobs_6_more_parcels);
-
     if (count > 0 && reschedule == null) {
 
     }
-
-
 }
 
 /**

@@ -132,8 +132,12 @@ function main() {
                 customer_record.setFieldValue(
                     'custentity_mp_std_date_first_usage', week_of_usage);
             }
+            customer_record.setFieldValue(
+                'custentity_mp_std_date_last_usage', week_of_usage);
+
             var weeks_used = customer_record.getFieldValue(
                 'custentity_mp_std_weeks_used');
+            
             weeks_used = weeks_used + 1;
             customer_record.setFieldValue(
                 'custentity_mp_std_weeks_used', weeks_used);

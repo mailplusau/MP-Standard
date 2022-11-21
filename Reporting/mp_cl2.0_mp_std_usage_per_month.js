@@ -906,7 +906,34 @@ define(
                         var lastDate = splitMonth[0] + '-' +
                             splitMonth[1] + '-' + lastDay
 
-                        var detailedInvoiceURLMonth =
+                        // var detailedInvoiceURLMonth =
+                        //     '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1648&deploy=1&zee=' +
+                        //     zee +
+                        //     '&start_date=' +
+                        //     startDate +
+                        //     '&last_date=' +
+                        //     lastDate +
+                        //     '" target=_blank>VIEW (per week)</a> | <a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1625&deploy=1&zee=' +
+                        //     zee +
+                        //     '&start_date=' +
+                        //     startDate +
+                        //     '&last_date=' +
+                        //     lastDate +
+                        //     '" target=_blank>VIEW (per day)</a> | <a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1278&deploy=1&zee=' +
+                        //     zee +
+                        //     '&start_date=' +
+                        //     startDate +
+                        //     '&last_date=' +
+                        //     lastDate +
+                        //     '" target=_blank>VIEW (Customer List)</a> | <a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1280&deploy=1&zee=' +
+                        //     zee +
+                        //     '&start_date=' +
+                        //     startDate +
+                        //     '&last_date=' +
+                        //     lastDate +
+                        //     '" target=_blank>VIEW (Franchisee List)</a>';
+                        
+                            var detailedInvoiceURLMonth =
                             '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1648&deploy=1&zee=' +
                             zee +
                             '&start_date=' +
@@ -919,19 +946,7 @@ define(
                             startDate +
                             '&last_date=' +
                             lastDate +
-                            '" target=_blank>VIEW (per day)</a> | <a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1278&deploy=1&zee=' +
-                            zee +
-                            '&start_date=' +
-                            startDate +
-                            '&last_date=' +
-                            lastDate +
-                            '" target=_blank>VIEW (Customer List)</a> | <a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1280&deploy=1&zee=' +
-                            zee +
-                            '&start_date=' +
-                            startDate +
-                            '&last_date=' +
-                            lastDate +
-                            '" target=_blank>VIEW (Franchisee List)</a>';
+                            '" target=_blank>VIEW (per day)</a>';
 
                         previewDataSet.push([detailedInvoiceURLMonth,
                             month, preview_row.mpexUsage,

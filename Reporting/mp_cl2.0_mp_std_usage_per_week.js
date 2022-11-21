@@ -361,6 +361,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                     console.log('month ' + month)
                     console.log('splitMonth ' + splitMonth);
+                    console.log('splitMonthV2 ' + splitMonthV2);
 
                     var formattedDate = dateISOToNetsuite(splitMonthV2[2] + '-' + splitMonthV2[1] + '-' + splitMonthV2[0]);
 
@@ -371,23 +372,28 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         type: format.Type.DATE
                     });
 
-                    var firstDay = new Date(splitMonth[0], (splitMonth[1]), 1).getDate();
-                    var lastDay = new Date(splitMonth[0], (splitMonth[1]), 0).getDate();
+                    var firstDay = new Date(splitMonthV2[0], (splitMonthV2[1]), 1).getDate();
+                    var lastDay = new Date(splitMonthV2[0], (splitMonthV2[1]), 0).getDate();
 
                     if (firstDay < 10) {
                         firstDay = '0' + firstDay;
                     }
 
                     // var startDate = firstDay + '/' + splitMonth[1] + '/' + splitMonth[0]
-                    var startDate = splitMonth[0] + '-' + splitMonth[1] + '-' +
+                    var startDate = splitMonthV2[2] + '-' + splitMonthV2[1] + '-' +
+                        splitMonthV2[0];
+                    var monthsStartDate = splitMonthV2[2] + '-' + splitMonthV2[1] + '-' +
                         firstDay;
                     // var lastDate = lastDay + '/' + splitMonth[1] + '/' + splitMonth[0]
-                    var lastDate = splitMonth[0] + '-' + splitMonth[1] + '-' +
+                    var lastDate = splitMonthV2[2] + '-' + splitMonthV2[1] + '-' +
                         lastDay
+
+                    console.log('startDate ' + startDate);
+                    console.log('lastDate ' + lastDate);
 
                     var detailedInvoiceURLMonth =
                         '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1627&deploy=1&zee=' +
-                        zee + '&start_date=' + startDate + '&last_date=' + lastDate +
+                        zee + '&start_date=' + monthsStartDate + '&last_date=' + lastDate +
                         '" target=_blank>VIEW (monthly)</a> | <a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1625&deploy=1&zee=' +
                         zee + '&start_date=' + startDate + '&last_date=' + lastDate +
                         '" target=_blank>VIEW (daily)</a>';

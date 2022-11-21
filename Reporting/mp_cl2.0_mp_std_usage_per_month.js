@@ -907,7 +907,7 @@ define(
                             splitMonth[1] + '-' + lastDay
 
                         var detailedInvoiceURLMonth =
-                            '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1271&deploy=1&zee=' +
+                            '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1648&deploy=1&zee=' +
                             zee +
                             '&start_date=' +
                             startDate +
@@ -1026,7 +1026,7 @@ define(
                     .forEach(function (customer_row, index) {
 
                         var links =
-                            '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1271&deploy=1&custid=' +
+                            '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1648&deploy=1&custid=' +
                             customer_row.customerID +
                             '&zee=' +
                             zee +
@@ -1130,7 +1130,7 @@ define(
                     .forEach(function (zee_row, index) {
 
                         var links =
-                            '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1271&deploy=1&zee=' +
+                            '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1648&deploy=1&zee=' +
                             zee_row.zeeID +
                             '&start_date=&last_date=" target=_blank>VIEW (per week)</a> | <a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1625&deploy=1&zee=' +
                             zee_row.zeeID +
@@ -1228,7 +1228,7 @@ define(
                             splitMonth[1] + '-' + lastDay
 
                         var detailedInvoiceURLMonth =
-                            '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1285&deploy=1&zee=' +
+                            '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1648&deploy=1&zee=' +
                             zee +
                             '&start_date=' +
                             startDate +
@@ -1389,7 +1389,7 @@ define(
                             splitMonth[1] + '-' + lastDay
 
                         var detailedInvoiceURLMonth =
-                            '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1271&deploy=1&zee=' +
+                            '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1648&deploy=1&zee=' +
                             zee +
                             '&start_date=' +
                             startDate +

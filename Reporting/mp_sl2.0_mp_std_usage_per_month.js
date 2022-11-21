@@ -137,16 +137,16 @@ define(
                 // inlineHtml += tableFilter();
                 // inlineHtml += dataTable();
 
-                form.addButton({
-                    id: 'download_csv',
-                    label: 'Export as CSV',
-                    functionName: 'downloadCsv()'
-                });
-                form.addButton({
-                    id: 'exp_vs_act_usage',
-                    label: 'New Customer List - Last 4 Months',
-                    functionName: 'expActWeeklyUsage()'
-                });
+                // form.addButton({
+                //     id: 'download_csv',
+                //     label: 'Export as CSV',
+                //     functionName: 'downloadCsv()'
+                // });
+                // form.addButton({
+                //     id: 'exp_vs_act_usage',
+                //     label: 'New Customer List - Last 4 Months',
+                //     functionName: 'expActWeeklyUsage()'
+                // });
 
                 form.addButton({
                     id: 'submit',

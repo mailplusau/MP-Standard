@@ -262,10 +262,10 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
 
         function loadDebtRecord(date_from, date_to, zee_id) {
-            // MP Standard - Usage Report - Last year to date (per day)
+            // MP Standard - Usage Report - Last year to date (per week)
             var mpexUsageResults = search.load({
                 type: 'customrecord_customer_product_stock',
-                id: 'customsearch_mp_std_usage_per_day'
+                id: 'customsearch_mp_std_usage_per_week'
             });
 
             var custID = currRec.getValue({
@@ -388,9 +388,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     var detailedInvoiceURLMonth =
                         '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1627&deploy=1&zee=' +
                         zee + '&start_date=' + startDate + '&last_date=' + lastDate +
-                        '" target=_blank>VIEW (monthly)</a> | <a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1648&deploy=1&zee=' +
+                        '" target=_blank>VIEW (monthly)</a> | <a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1625&deploy=1&zee=' +
                         zee + '&start_date=' + startDate + '&last_date=' + lastDate +
-                        '" target=_blank>VIEW (weekly)</a>';
+                        '" target=_blank>VIEW (daily)</a>';
 
 
 

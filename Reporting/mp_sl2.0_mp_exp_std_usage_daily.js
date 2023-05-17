@@ -54,7 +54,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
                 if (isNullorEmpty(context.request.parameters.custid)) {
                     var form = ui.createForm({
-                        title: 'MP Standard Weekly Usage'
+                        title: 'MP Express & Standard Daily Usage'
                     });
                 } else {
                     var customer_record = record.load({
@@ -67,7 +67,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     });
 
                     var form = ui.createForm({
-                        title: 'MP Standard Weekly Usage - ' + company_name
+                        title: 'MP Express & Standard Daily Usage - ' + company_name
                     });
                 }
 
@@ -130,7 +130,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     layoutType: ui.FieldLayoutType.STARTROW
                 }).defaultValue = inlineHtml;
 
-                form.clientScriptFileId = 6045250;
+                form.clientScriptFileId = 6079295;
 
                 context.response.writePage(form);
             } else {
@@ -153,7 +153,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
         function dateFilterSection(start_date, last_date) {
             var inlineHtml = '<div class="form-group container date_filter_section">';
             inlineHtml += '<div class="row">';
-            inlineHtml += '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">DATE FILTER</span></h4></div>';
+            inlineHtml += '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #095C7B;">DATE FILTER</span></h4></div>';
             inlineHtml += '</div>';
             inlineHtml += '</div>';
 
@@ -234,7 +234,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
         function franchiseeDropdownSection(resultSetZees, context) {
             var inlineHtml = '<div class="form-group container date_filter_section">';
             inlineHtml += '<div class="row">';
-            inlineHtml += '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">FRANCHISEE</span></h4></div>';
+            inlineHtml += '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #095C7B;">FRANCHISEE</span></h4></div>';
             inlineHtml += '</div>';
             inlineHtml += '</div>';
 
@@ -367,6 +367,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
             inlineHtml += '<tbody id="result_customer_benchmark" class="result-customer_benchmark"></tbody>';
 
+            inlineHtml += '<tfoot style="font-size: larger;"><tr style="background-color: #085c7b2e;border: 2px solid;"><th  style="text-align:right">Total:</th><th></th><th></th><th></th></tr></tfoot>'
+
             inlineHtml += '</table>';
             return inlineHtml;
         }
@@ -381,51 +383,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             inlineHtml += '<div class="col-xs-12 loading_div">';
             inlineHtml += '<h1>Loading...</h1>';
             inlineHtml += '</div></div></div>';
-
-            return inlineHtml;
-        }
-
-        /**
-         * The date input fields to filter the invoices.
-         * Even if the parameters `date_from` and `date_to` are defined, they can't be initiated in the HTML code.
-         * They are initiated with jQuery in the `pageInit()` function.
-         * @return  {String} `inlineHtml`
-         */
-        function tableFilter() {
-            var inlineHtml = '<div id="table_filter_section" class="table_filters_section hide">';
-            inlineHtml += '<div class="form-group container">';
-            inlineHtml += '<div class="row">';
-            inlineHtml += '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12">TABLE FILTERS</span></h4></div>';
-            inlineHtml += '</div>';
-            inlineHtml += '</div>';
-
-            inlineHtml += '<div class="form-group container table_filter_section">';
-            inlineHtml += '<div class="row">';
-
-            inlineHtml += '<div class="col-sm-4 showMPTicket_box">';
-            inlineHtml += '<div class="input-group">';
-            inlineHtml += '<span class="input-group-addon" id="showMPTicket_box">Show/Hide | MP Ticket Column</span>';
-            inlineHtml += '<button type="button" id="showMPTicket_box" class="toggle-mp-ticket btn btn-success"><span class="span_class glyphicon glyphicon-plus"></span></button>'
-            inlineHtml += '</div></div>';
-
-            // // MAAP Allocation
-            inlineHtml += '<div class="col-sm-5 showMAAP_box">';
-            inlineHtml += '<div class="input-group">';
-            inlineHtml += '<span class="input-group-addon" id="showMAAP_box">Show/Hide | Matching MAAP Allocation</span>';
-            inlineHtml += '<button type="button" id="showMAAP_box" class="toggle-maap btn btn-success"><span class="span_class glyphicon glyphicon-plus"></span></button>'
-            inlineHtml += '<button type="button" id="showMAAP_box" class="toggle-maap-danger btn btn-danger"><span class="span_class glyphicon glyphicon-minus"></span></button>'
-            inlineHtml += '</div></div>';
-
-            //Toggle MAAP Bank Account
-            inlineHtml += '<div class="col-sm-auto showMAAP_bank">';
-            inlineHtml += '<div class="input-group">';
-            inlineHtml += '<span class="input-group-addon" id="showMAAP_bank">Show/Hide | MAAP Bank Account</span>';
-            inlineHtml += '<button type="button" id="showMAAP_bank" class="toggle-maap-bank btn btn-danger"><span class="span_class glyphicon glyphicon-minus"></span></button>'
-            inlineHtml += '</div></div>';
-
-            inlineHtml += '</div></div>';
-
-            inlineHtml += '</div>';
 
             return inlineHtml;
         }

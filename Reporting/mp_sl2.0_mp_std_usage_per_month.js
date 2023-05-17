@@ -242,9 +242,9 @@ define(
 
             // Tabs headers
             inlineHtml +=
-                '<style>.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }';
+                '<style>.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #095C7B; color: #fff }';
             inlineHtml +=
-                '.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }';
+                '.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #095C7B; color: #095C7B; }';
             inlineHtml += '</style>';
 
             inlineHtml +=
@@ -500,7 +500,7 @@ define(
             inlineHtml += '<table id="mpexusage-' +
                 name +
                 '" class="table table-responsive table-striped customer tablesorter" style="width: 100%;">';
-            inlineHtml += '<thead style="color: white;background-color: #379E8F;">';
+            inlineHtml += '<thead style="color: white;background-color: #095C7B;">';
             inlineHtml += '<tr class="text-center">';
 
             inlineHtml += '</tr>';

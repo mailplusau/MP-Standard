@@ -54,7 +54,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
                 if (isNullorEmpty(context.request.parameters.custid)) {
                     var form = ui.createForm({
-                        title: 'MP Standard Weekly Usage'
+                        title: 'MP Product Scans Weekly Usage'
                     });
                 } else {
                     var customer_record = record.load({
@@ -67,14 +67,28 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     });
 
                     var form = ui.createForm({
-                        title: 'MP Standard Weekly Usage - ' + company_name
+                        title: 'MP Product Scans Weekly Usage - ' + company_name
                     });
                 }
 
                 var inlineHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;}</style>';
 
                 form.addField({
-                    id: 'custpage_table_csv',
+                    id: 'custpage_table_csv_monthly',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                });
+                form.addField({
+                    id: 'custpage_table_csv_weekly',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                });
+                form.addField({
+                    id: 'custpage_table_csv_daily',
                     type: ui.FieldType.TEXT,
                     label: 'Table CSV'
                 }).updateDisplayType({
@@ -106,9 +120,56 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 inlineHtml += dateFilterSection(start_date, last_date);
                 // inlineHtml += invoiceTypeSelection();
                 inlineHtml += loadingSection();
-                inlineHtml += '<div id="container"></div>'
+
+                // Tabs headers
+                inlineHtml +=
+                    '<style>.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #095c7b; color: #fff }';
+                inlineHtml +=
+                    '.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #095c7b; color: #095c7b; }';
+                inlineHtml += '</style>';
+
+                inlineHtml +=
+                    '<div style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-pills nav-justified main-tabs-sections " style="margin:0%; ">';
+
+                inlineHtml +=
+                    '<li role="presentation" class="active"><a data-toggle="tab" href="#monthly_scans"><b>MONTHLY</b></a></li>';
+                inlineHtml +=
+                    '<li role="presentation" class=""><a data-toggle="tab" href="#weekly_scans"><b>WEEKLY</b></a></li>';
+                    inlineHtml +=
+                    '<li role="presentation" class=""><a data-toggle="tab" href="#daily_scans"><b>DAILY</b></a></li>';
+
+                inlineHtml += '</ul></div>';
+
+                // Tabs content
+                inlineHtml += '<div class="tab-content">';
+                inlineHtml += '<div role="tabpanel" class="tab-pane active" id="monthly_scans">';
+                inlineHtml += '<figure class="highcharts-figure">';
+                inlineHtml += '<div id="container_monthly"></div>';
+                inlineHtml += '</figure><br></br>';
+                inlineHtml += dataTable('monthly_scans');
+                inlineHtml += '</div>';
+
+                inlineHtml += '<div role="tabpanel" class="tab-pane" id="weekly_scans">';
+
+                inlineHtml += '<figure class="highcharts-figure">';
+                inlineHtml += '<div id="container_weekly"></div>';
+                inlineHtml += '</figure><br></br>';
+                inlineHtml += dataTable('weekly_scans');
+                inlineHtml += '</div>';
+
+                inlineHtml += '<div role="tabpanel" class="tab-pane" id="daily_scans">';
+
+                inlineHtml += '<figure class="highcharts-figure">';
+                inlineHtml += '<div id="container_daily"></div>';
+                inlineHtml += '</figure><br></br>';
+                inlineHtml += dataTable('daily_scans');
+                inlineHtml += '</div>';
+
+
+                inlineHtml += '</div></div>';
+                // inlineHtml += '<div id="container"></div>'
                 // inlineHtml += tableFilter();
-                inlineHtml += dataTable();
+                // inlineHtml += dataTable();
 
                 form.addButton({
                     id: 'download_csv',
@@ -130,7 +191,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     layoutType: ui.FieldLayoutType.STARTROW
                 }).defaultValue = inlineHtml;
 
-                form.clientScriptFileId = 6045250;
+                form.clientScriptFileId = 6068299;
 
                 context.response.writePage(form);
             } else {
@@ -153,7 +214,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
         function dateFilterSection(start_date, last_date) {
             var inlineHtml = '<div class="form-group container date_filter_section">';
             inlineHtml += '<div class="row">';
-            inlineHtml += '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">DATE FILTER</span></h4></div>';
+            inlineHtml += '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #095C7B;">DATE FILTER</span></h4></div>';
             inlineHtml += '</div>';
             inlineHtml += '</div>';
 
@@ -234,7 +295,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
         function franchiseeDropdownSection(resultSetZees, context) {
             var inlineHtml = '<div class="form-group container date_filter_section">';
             inlineHtml += '<div class="row">';
-            inlineHtml += '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">FRANCHISEE</span></h4></div>';
+            inlineHtml += '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #095C7B;">FRANCHISEE</span></h4></div>';
             inlineHtml += '</div>';
             inlineHtml += '</div>';
 
@@ -337,37 +398,24 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
          * The table that will display the differents invoices linked to the franchisee and the time period.
          * @return  {String}    inlineHtml
          */
-        function dataTable() {
-            var inlineHtml = '<style>table#customer_benchmark_preview {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#customer_benchmark_preview th{text-align: center;} .bolded{font-weight: bold;}</style>';
-            inlineHtml += '<table id="customer_benchmark_preview" class="table table-responsive table-striped customer tablesorter hide" style="width: 100%;">';
-            inlineHtml += '<thead style="color: white;background-color: #095C7B;>';
-            inlineHtml += '<tr class="text-center">';
-            // inlineHtml += '<th>Invoice Internal ID</th>';
-            // inlineHtml += '<th>Transaction Type</th>';
-            // inlineHtml += '<th>Transaction Date</th>';
-            // inlineHtml += '<th>Posting Period</th>';
-            // inlineHtml += '<th>Document Number</th>';
-            // inlineHtml += '<th>Item</th>';
-            // inlineHtml += '<th>Quantity</th>';
-            // inlineHtml += '<th>Amount</th>';
-            // inlineHtml += '<th>Tax Total</th>';
-            // inlineHtml += '<th>Days Open</th>';
-            // inlineHtml += '<th>Days Overdue</th>';
-            // inlineHtml += '<th>Closed Date</th>';
-            // inlineHtml += '<th>Partner</th>';
-            // inlineHtml += '<th>Location</th>';
-            // inlineHtml += '<th>Invoice Status</th>';
-            // inlineHtml += '<th>Customer Internal ID</th>';
-            // inlineHtml += '<th>Customer ID</th>';
-            // inlineHtml += '<th>Customer Name</th>';
-            // inlineHtml += '<th>Customer Status</th>';
-            // inlineHtml += '<th>Customer Start Date</th>';
-            inlineHtml += '</tr>';
-            inlineHtml += '</thead>';
+        function dataTable(name) {
+            var inlineHtml = '<style>table#mpexusage-' +
+				name +
+				' {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#mpexusage-' +
+				name +
+				' th{text-align: center;} .bolded{font-weight: bold;}</style>';
+			inlineHtml += '<table id="mpexusage-' +
+				name +
+				'" class="table table-responsive table-striped customer tablesorter" style="width: 100%;">';
+			inlineHtml += '<thead style="color: white;background-color: #095c7b;">';
+			inlineHtml += '<tr class="text-center">';
 
-            inlineHtml += '<tbody id="result_customer_benchmark" class="result-customer_benchmark"></tbody>';
+			inlineHtml += '</tr>';
+			inlineHtml += '</thead>';
 
-            inlineHtml += '</table>';
+			inlineHtml += '<tbody id="result_usage_' + name + '" ></tbody>';
+
+			inlineHtml += '</table>';
             return inlineHtml;
         }
 

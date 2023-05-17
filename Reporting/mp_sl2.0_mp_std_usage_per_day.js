@@ -340,7 +340,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
         function dataTable() {
             var inlineHtml = '<style>table#customer_benchmark_preview {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#customer_benchmark_preview th{text-align: center;} .bolded{font-weight: bold;}</style>';
             inlineHtml += '<table id="customer_benchmark_preview" class="table table-responsive table-striped customer tablesorter hide" style="width: 100%;">';
-            inlineHtml += '<thead style="color: white;background-color: #379E8F;>';
+            inlineHtml += '<thead style="color: white;background-color: #095C7B;>';
             inlineHtml += '<tr class="text-center">';
             // inlineHtml += '<th>Invoice Internal ID</th>';
             // inlineHtml += '<th>Transaction Type</th>';

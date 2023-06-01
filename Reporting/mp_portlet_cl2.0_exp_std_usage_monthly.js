@@ -10,10 +10,10 @@
 
 
 define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
-    'N/error', 'N/url', 'N/format', 'N/currentRecord'
+    'N/error', 'N/url', 'N/format', 'N/currentRecord', 'N/portlet'
 ],
     function (email, runtime, search, record, http, log, error, url, format,
-        currentRecord) {
+        currentRecord, portlet) {
         var zee = 0;
         var role = 0;
         // var custid = 0;
@@ -158,15 +158,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
         function afterSubmit() {
             $('.tabs_div').removeClass('hide');
-            $('.date_filter_section').removeClass('hide');
-            $('.date_filter_div').removeClass('hide');
+            // $('.date_filter_section').removeClass('hide');
+            // $('.date_filter_div').removeClass('hide');
             $('.filter_buttons_section').removeClass('hide');
-            $('.zee_label_section').removeClass('hide');
-            $('.zee_dropdown_div').removeClass('hide');
-            $('.cust_label_section').removeClass('hide');
-            $('.cust_dropdown_div').removeClass('hide');
-            $('.period_dropdown_section').removeClass('hide');
-            $('.datatable_div').removeClass('hide');
+            // $('.zee_label_section').removeClass('hide');
+            // $('.zee_dropdown_div').removeClass('hide');
+            // $('.cust_label_section').removeClass('hide');
+            // $('.cust_dropdown_div').removeClass('hide');
+            // $('.period_dropdown_section').removeClass('hide');
+            // $('.datatable_div').removeClass('hide');
 
             $('.loading_section').addClass('hide');
 
@@ -244,48 +244,21 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
             });
 
-            /**
-             *  Submit Button Function
-             */
-            $('#submit').click(function () {
-                // Ajax request
-                var fewSeconds = 10;
-                var btn = $(this);
-                btn.addClass('disabled');
-                // btn.addClass('')
-                setTimeout(function () {
-                    btn.removeClass('disabled');
-                }, fewSeconds * 1000);
+            $("#fullReport").click(function () {
 
-                debtDataSet = [];
-                debt_set = [];
+                var url = baseURL + "/app/site/hosting/scriptlet.nl?script=1712&deploy=1"
+                window.open(url, '_blank')
+                // window.location.href = url;
 
-                debtDataSet2 = [];
-                debt_set2 = [];
-
-                debtDataSet3 = [];
-                debt_set3 = [];
-
-                debtDataSet4 = [];
-                debt_set4 = [];
-
-                debtDataSet5 = [];
-                debt_set5 = [];
-
-                debtDataSet6 = [];
-                debt_set6 = [];
-
-                beforeSubmit();
-                submitSearch();
-
-                return true;
             });
+
+
 
 
             /**
              *  Auto Load Submit Search and Load Results on Page Initialisation
              */
-            
+
             submitSearch();
             var dataTable = $('#mpexusage-weekly_scans').DataTable();
             var dataTable2 = $('#mpexusage-monthly_scans').DataTable();
@@ -306,6 +279,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             $('.collapse').on('hide.bs.collapse', function () {
                 $(".range_filter_section_top").css("padding-top", "0px");
             })
+
+            portlet.resize();
         }
 
         function adhocNewCustomers() {

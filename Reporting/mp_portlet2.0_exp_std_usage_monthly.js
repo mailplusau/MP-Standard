@@ -1,22 +1,24 @@
 /**
  
  *@NApiVersion 2.0
- *@NScriptType Suitelet
+ *@NScriptType Portlet
  * Author:               Ankith Ravindran
- * Created on:           Fri May 05 2023
- * Modified on:          Fri May 05 2023 08:50:18
- * SuiteScript Version:  2.0
- * Description:          Reporting page that displayes the scans for all products.  
+ * Created on:           Fri Jun 02 2023
+ * Modified on:          Fri Jun 02 2023 08:43:32
+ * SuiteScript Version:  2.0 
+ * Description:          Reporting page that displayes the scans for all products.   
  *
  * Copyright (c) 2023 MailPlus Pty. Ltd.
  */
+
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log', 'N/redirect'],
     function (ui, email, runtime, search, record, http, log, redirect) {
         var role = 0;
         var zee = 0;
 
-        function onRequest(context) {
+        function render(params) {
+            var portlet = params.portlet;
             var baseURL = 'https://system.na2.netsuite.com';
             if (runtime.EnvType == "SANDBOX") {
                 baseURL = 'https://system.sandbox.netsuite.com';
@@ -24,266 +26,155 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             zee = 0;
             role = runtime.getCurrentUser().role;
 
+            //If role is Franchisee
             if (role == 1000) {
                 zee = runtime.getCurrentUser().id;
+            };
+
+            start_date = null;
+
+            last_date = null;
+
+
+            portlet.title = 'MP Product Scans - Monthly'
+
+            var inlineHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;}.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.button-shadow{box-shadow:5.5px 4.2px 5.9px rgba(0,0,0,.198),18.3px 14.1px 19.9px rgba(0,0,0,.292),82px 63px 89px rgba(0,0,0,.49)}.button-shadow{box-shadow:2.8px 2.8px 2.2px rgba(0,0,0,.02),6.7px 6.7px 5.3px rgba(0,0,0,.028),12.5px 12.5px 10px rgba(0,0,0,.035),22.3px 22.3px 17.9px rgba(0,0,0,.042),41.8px 41.8px 33.4px rgba(0,0,0,.05),100px 100px 80px rgba(0,0,0,.07)}</style>';
+
+
+            // inlineHtml += stateDropdownSection();
+
+            inlineHtml += loadingSection();
+
+            inlineHtml +=
+                '<div class="form-group container filter_buttons_section hide">';
+            inlineHtml += '<div class="row">';
+            inlineHtml +=
+                '<div class="col-xs-4"></div>'
+            inlineHtml +=
+                '<div class="col-xs-4"><input type="button" value="FULL REPORT" class="form-control btn btn-primary button-shadow" id="fullReport" style="background-color: #095C7B;border-radius: 30px;" /></div>'
+            inlineHtml +=
+                '<div class="col-xs-4"></div>'
+
+            inlineHtml += '</div>';
+            inlineHtml += '</div></br></br>';
+
+            // if (role != 1000) {
+            //     //Search: SMC - Franchisees
+            //     var searchZees = search.load({
+            //         id: 'customsearch_smc_franchisee'
+            //     });
+            //     var resultSetZees = searchZees.run();
+
+            //     inlineHtml += franchiseeDropdownSection(resultSetZees, context);
+            // }
+            // if (!isNullorEmpty(zee)) {
+            //     inlineHtml += customerDropdownSection(context);
+            // }
+
+            // inlineHtml += dateFilterSection(start_date, last_date);
+            // inlineHtml += invoiceTypeSelection();
+
+
+            // Tabs headers
+            inlineHtml +=
+                '<style>.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #095c7b; color: #fff }';
+            inlineHtml +=
+                '.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #095c7b; color: #095c7b; border-radius: 30px;}';
+            inlineHtml += '</style>';
+
+            inlineHtml +=
+                '<div class="tabs_div hide" style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-pills nav-justified main-tabs-sections " style="margin:0%; ">';
+
+            // if (freq == 'weekly') {
+            //     inlineHtml +=
+            //         '<li role="presentation" class="active"><a data-toggle="tab" href="#monthly_scans"><b>WEEKLY OVERVIEW</b></a></li>';
+            // } else if (freq == 'daily') {
+            //     inlineHtml +=
+            //         '<li role="presentation" class="active"><a data-toggle="tab" href="#monthly_scans"><b>DAILY OVERVIEW</b></a></li>';
+            // } else {
+            inlineHtml +=
+                '<li role="presentation" class="active"><a data-toggle="tab" href="#monthly_scans"><b>MONTHLY OVERVIEW</b></a></li>';
+            // }
+
+            // if (isNullorEmpty(customerID)) {
+            //     inlineHtml +=
+            //         '<li role="presentation" class=""><a data-toggle="tab" href="#customer_list"><b>CUSTOMER LIST</b></a></li>';
+            //     if (role != 1000 && isNullorEmpty(zee)) {
+            //         inlineHtml +=
+            //             '<li role="presentation" class=""><a data-toggle="tab" href="#zee_list"><b>FRANCHISEE LIST</b></a></li>';
+            //     }
+            // }
+
+
+
+            inlineHtml +=
+                '<li role="presentation" class=""><a data-toggle="tab" href="#source"><b>SOURCE</b></a></li>';
+            inlineHtml +=
+                '<li role="presentation" class=""><a data-toggle="tab" href="#weights"><b>PRODUCT WEIGHTS</b></a></li>';
+
+            inlineHtml += '</ul></div>';
+
+            // Tabs content
+            inlineHtml += '<div class="tab-content">';
+            inlineHtml += '<div role="tabpanel" class="tab-pane active" id="monthly_scans">';
+            inlineHtml += '<figure class="highcharts-figure">';
+            inlineHtml += '<div id="container_monthly"></div>';
+            inlineHtml += '</figure><br></br>';
+            inlineHtml += dataTable('monthly_scans');
+            inlineHtml += '</div>';
+
+            inlineHtml += '<div role="tabpanel" class="tab-pane" id="customer_list">';
+
+            inlineHtml += '<figure class="highcharts-figure">';
+            inlineHtml += '<div id="container_cust_list"></div>';
+            inlineHtml += '</figure><br></br>';
+            inlineHtml += dataTable('customer_list');
+            inlineHtml += '</div>';
+
+            if (role != 1000) {
+                inlineHtml += '<div role="tabpanel" class="tab-pane" id="zee_list">';
+
+                inlineHtml += '<figure class="highcharts-figure">';
+                inlineHtml += '<div id="container_zee_list"></div>';
+                inlineHtml += '</figure><br></br>';
+                inlineHtml += dataTable('zee_list');
+                inlineHtml += '</div>';
             }
 
-            if (context.request.method === 'GET') {
-                var start_date = context.request.parameters.start_date;
-                var last_date = context.request.parameters.last_date;
-                var freq = context.request.parameters.freq;
-                if (zee == 0) {
-                    zee = context.request.parameters.zee;
-                }
+            inlineHtml += '<div role="tabpanel" class="tab-pane" id="source">';
 
-                if (isNullorEmpty(start_date)) {
-                    start_date = null;
-                }
+            inlineHtml += '<figure class="highcharts-figure">';
+            inlineHtml += '<div id="container_source"></div>';
+            inlineHtml += '</figure><br></br>';
+            inlineHtml += dataTable('source');
+            inlineHtml += '</div>';
 
-                if (isNullorEmpty(last_date)) {
-                    last_date = null;
-                }
+            inlineHtml += '<div role="tabpanel" class="tab-pane" id="weights">';
 
-
-                var stateID = context.request.parameters.state;
-                if (isNullorEmpty(stateID)) {
-                    stateID = null;
-                }
-
-                var customerID = context.request.parameters.custid;
-                if (isNullorEmpty(customerID)) {
-                    customerID = null;
-                }
+            inlineHtml += '<figure class="highcharts-figure">';
+            inlineHtml += '<div id="container_weights"></div>';
+            inlineHtml += '</figure><br></br>';
+            inlineHtml += dataTable('weights');
+            inlineHtml += '</div>';
 
 
-                if (isNullorEmpty(context.request.parameters.custid)) {
-                    if (freq == 'weekly') {
-                        var form = ui.createForm({
-                            title: 'MP Product Scans - Weekly'
-                        });
-                    } else if (freq == 'daily') {
-                        var form = ui.createForm({
-                            title: 'MP Product Scans - Daily'
-                        });
-                    } else {
-                        var form = ui.createForm({
-                            title: 'MP Product Scans - Monthly'
-                        });
-                    }
-
-                } else {
-                    var customer_record = record.load({
-                        type: 'customer',
-                        id: parseInt(context.request.parameters.custid)
-                    });
-
-                    company_name = customer_record.getValue({
-                        fieldId: 'companyname'
-                    });
-
-                    zee = customer_record.getValue({
-                        fieldId: 'partner'
-                    });
-
-                    if (freq == 'weekly') {
-                        var form = ui.createForm({
-                            title: 'MP Product Scans - Weekly - ' + company_name
-                        });
-                    } else if (freq == 'daily') {
-                        var form = ui.createForm({
-                            title: 'MP Product Scans - Daily - ' + company_name
-                        });
-                    } else {
-                        var form = ui.createForm({
-                            title: 'MP Product Scans - Monthly - ' + company_name
-                        });
-                    }
-
-                }
-
-                var inlineHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;}.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.button-shadow{box-shadow:5.5px 4.2px 5.9px rgba(0,0,0,.198),18.3px 14.1px 19.9px rgba(0,0,0,.292),82px 63px 89px rgba(0,0,0,.49)}</style>';
-
-                form.addField({
-                    id: 'custpage_table_csv_monthly',
-                    type: ui.FieldType.TEXT,
-                    label: 'Table CSV'
-                }).updateDisplayType({
-                    displayType: ui.FieldDisplayType.HIDDEN
-                });
-                form.addField({
-                    id: 'custpage_table_csv_weekly',
-                    type: ui.FieldType.TEXT,
-                    label: 'Table CSV'
-                }).updateDisplayType({
-                    displayType: ui.FieldDisplayType.HIDDEN
-                });
-                form.addField({
-                    id: 'custpage_table_csv_daily',
-                    type: ui.FieldType.TEXT,
-                    label: 'Table CSV'
-                }).updateDisplayType({
-                    displayType: ui.FieldDisplayType.HIDDEN
-                });
-
-                var custInternalIDField = form.addField({
-                    id: 'custpage_custid',
-                    type: ui.FieldType.TEXT,
-                    label: 'Customer Internal ID'
-                }).updateDisplayType({
-                    displayType: ui.FieldDisplayType.HIDDEN
-                });
-
-                form.addField({
-                    id: 'custpage_freq',
-                    type: ui.FieldType.TEXT,
-                    label: 'Freq'
-                }).updateDisplayType({
-                    displayType: ui.FieldDisplayType.HIDDEN
-                }).defaultValue = freq;
-
-                custInternalIDField.defaultValue = customerID
-
-                // inlineHtml += stateDropdownSection();
-
-                inlineHtml += loadingSection();
-
-                if (role != 1000) {
-                    //Search: SMC - Franchisees
-                    var searchZees = search.load({
-                        id: 'customsearch_smc_franchisee'
-                    });
-                    var resultSetZees = searchZees.run();
-
-                    inlineHtml += franchiseeDropdownSection(resultSetZees, context);
-                }
-                if (!isNullorEmpty(zee)) {
-                    inlineHtml += customerDropdownSection(context);
-                }
-
-                inlineHtml += dateFilterSection(start_date, last_date);
-                // inlineHtml += invoiceTypeSelection();
-                
-
-                // Tabs headers
-                inlineHtml +=
-                    '<style>.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #095c7b; color: #fff }';
-                inlineHtml +=
-                    '.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #095c7b; color: #095c7b; }';
-                inlineHtml += '</style>';
-
-                inlineHtml +=
-                    '<div class="tabs_div hide" style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-pills nav-justified main-tabs-sections " style="margin:0%; ">';
-
-                if (freq == 'weekly') {
-                    inlineHtml +=
-                        '<li role="presentation" class="active"><a data-toggle="tab" href="#monthly_scans"><b>WEEKLY OVERVIEW</b></a></li>';
-                } else if (freq == 'daily') {
-                    inlineHtml +=
-                        '<li role="presentation" class="active"><a data-toggle="tab" href="#monthly_scans"><b>DAILY OVERVIEW</b></a></li>';
-                } else {
-                    inlineHtml +=
-                        '<li role="presentation" class="active"><a data-toggle="tab" href="#monthly_scans"><b>MONTHLY OVERVIEW</b></a></li>';
-                }
-
-                if (isNullorEmpty(customerID)) {
-                    inlineHtml +=
-                        '<li role="presentation" class=""><a data-toggle="tab" href="#customer_list"><b>CUSTOMER LIST</b></a></li>';
-                    if (role != 1000 && isNullorEmpty(zee)) {
-                        inlineHtml +=
-                            '<li role="presentation" class=""><a data-toggle="tab" href="#zee_list"><b>FRANCHISEE LIST</b></a></li>';
-                    }
-                }
+            inlineHtml += '</div></div>';
+            // inlineHtml += '<div id="container"></div>'
+            // inlineHtml += tableFilter();
+            // inlineHtml += dataTable();
 
 
 
-                inlineHtml +=
-                    '<li role="presentation" class=""><a data-toggle="tab" href="#source"><b>SOURCE</b></a></li>';
-                inlineHtml +=
-                    '<li role="presentation" class=""><a data-toggle="tab" href="#weights"><b>PRODUCT WEIGHTS</b></a></li>';
+            portlet.addField({
+                id: 'preview_table',
+                label: 'inlinehtml',
+                type: 'inlinehtml'
+            }).updateLayoutType({
+                layoutType: ui.FieldLayoutType.STARTROW
+            }).defaultValue = inlineHtml;
 
-                inlineHtml += '</ul></div>';
+            portlet.clientScriptFileId = 6406089;
 
-                // Tabs content
-                inlineHtml += '<div class="tab-content">';
-                inlineHtml += '<div role="tabpanel" class="tab-pane active" id="monthly_scans">';
-                inlineHtml += '<figure class="highcharts-figure">';
-                inlineHtml += '<div id="container_monthly"></div>';
-                inlineHtml += '</figure><br></br>';
-                inlineHtml += dataTable('monthly_scans');
-                inlineHtml += '</div>';
-
-                inlineHtml += '<div role="tabpanel" class="tab-pane" id="customer_list">';
-
-                inlineHtml += '<figure class="highcharts-figure">';
-                inlineHtml += '<div id="container_cust_list"></div>';
-                inlineHtml += '</figure><br></br>';
-                inlineHtml += dataTable('customer_list');
-                inlineHtml += '</div>';
-
-                if (role != 1000) {
-                    inlineHtml += '<div role="tabpanel" class="tab-pane" id="zee_list">';
-
-                    inlineHtml += '<figure class="highcharts-figure">';
-                    inlineHtml += '<div id="container_zee_list"></div>';
-                    inlineHtml += '</figure><br></br>';
-                    inlineHtml += dataTable('zee_list');
-                    inlineHtml += '</div>';
-                }
-
-                inlineHtml += '<div role="tabpanel" class="tab-pane" id="source">';
-
-                inlineHtml += '<figure class="highcharts-figure">';
-                inlineHtml += '<div id="container_source"></div>';
-                inlineHtml += '</figure><br></br>';
-                inlineHtml += dataTable('source');
-                inlineHtml += '</div>';
-
-                inlineHtml += '<div role="tabpanel" class="tab-pane" id="weights">';
-
-                inlineHtml += '<figure class="highcharts-figure">';
-                inlineHtml += '<div id="container_weights"></div>';
-                inlineHtml += '</figure><br></br>';
-                inlineHtml += dataTable('weights');
-                inlineHtml += '</div>';
-
-
-                inlineHtml += '</div></div>';
-                // inlineHtml += '<div id="container"></div>'
-                // inlineHtml += tableFilter();
-                // inlineHtml += dataTable();
-
-                form.addButton({
-                    id: 'download_csv',
-                    label: 'Export as CSV',
-                    functionName: 'downloadCsv()'
-                });
-
-
-                // form.addButton({
-                //     id: 'submit',
-                //     label: 'Submit Search'
-                // });
-
-                form.addField({
-                    id: 'preview_table',
-                    label: 'inlinehtml',
-                    type: 'inlinehtml'
-                }).updateLayoutType({
-                    layoutType: ui.FieldLayoutType.STARTROW
-                }).defaultValue = inlineHtml;
-
-                form.clientScriptFileId = 6276966;
-
-                context.response.writePage(form);
-            } else {
-                // redirect.toSuitelet({
-                //  scriptId: 750,
-                //  deploymentId: 1,
-                //  parameters: {
-                //      'type': 'create'
-                //  }
-                // });
-            }
         }
 
         /**
@@ -565,7 +456,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 ' {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#mpexusage-' +
                 name +
                 ' th{text-align: center;} .bolded{font-weight: bold;}</style>';
-            inlineHtml += '<div class="datatable_div"><table id="mpexusage-' +
+            inlineHtml += '<div class="datatable_div hide"><table id="mpexusage-' +
                 name +
                 '" class="table table-responsive table-striped customer tablesorter cell-border compact" style="width: 100%;">';
             inlineHtml += '<thead style="color: white;background-color: #095c7b;">';
@@ -673,6 +564,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             }
         }
         return {
-            onRequest: onRequest
+            render: render
         };
     });

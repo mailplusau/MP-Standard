@@ -35,6 +35,49 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
             last_date = null;
 
+            var date = new Date();
+            var y = date.getFullYear();
+            var m = date.getMonth();
+            //If begining of the year, show the current financial year, else show the current 
+            if (m < 5) {
+                //Calculate the Current inancial Year
+
+                var firstDay = new Date(y, m, 1);
+                var lastDay = new Date(y, m + 1, 0);
+
+                firstDay.setHours(0, 0, 0, 0);
+                lastDay.setHours(0, 0, 0, 0);
+
+                if (m >= 6) {
+                    var first_july = new Date(y, 6, 1);
+                } else {
+                    var first_july = new Date(y - 1, 6, 1);
+                }
+                date_from = first_july;
+                date_to = lastDay;
+
+                var start_date = GetFormattedDate(date_from);
+                var last_date = GetFormattedDate(date_to);
+            } else {
+                //Calculate the Current Calendar Year
+                var today_day_in_month = date.getDate();
+                var today_date = new Date(Date.UTC(y, m, today_day_in_month))
+                var first_day_in_year = new Date(Date.UTC(y, 0));
+                var date_from = first_day_in_year.toISOString().split('T')[0];
+                var date_to = today_date.toISOString().split('T')[0];
+
+                var start_date = date_from;
+                var last_date = last_date;
+            }
+
+            log.debug({
+                title: 'start_date',
+                details: start_date
+            });
+            log.debug({
+                title: 'last_date',
+                details: last_date
+            });
 
             portlet.title = 'MP Product Scans - Monthly'
 
@@ -71,9 +114,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             //     inlineHtml += customerDropdownSection(context);
             // }
 
-            // inlineHtml += dateFilterSection(start_date, last_date);
+            inlineHtml += dateFilterSection(start_date, last_date);
             // inlineHtml += invoiceTypeSelection();
-
+            inlineHtml += '</br></br>';
 
             // Tabs headers
             inlineHtml +=
@@ -191,7 +234,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             inlineHtml += '</div>';
 
 
-            inlineHtml += periodDropdownSection(start_date, last_date);
+            // inlineHtml += periodDropdownSection(start_date, last_date);
 
             inlineHtml += '<div class="form-group container date_filter_div hide">';
             inlineHtml += '<div class="row">';
@@ -200,9 +243,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             inlineHtml += '<div class="input-group">';
             inlineHtml += '<span class="input-group-addon" id="date_from_text">From</span>';
             if (isNullorEmpty(start_date)) {
-                inlineHtml += '<input id="date_from" class="form-control date_from" type="date" />';
+                inlineHtml += '<input id="date_from" class="form-control date_from" type="date" readonly/>';
             } else {
-                inlineHtml += '<input id="date_from" class="form-control date_from" type="date" value="' + start_date + '"/>';
+                inlineHtml += '<input id="date_from" class="form-control date_from" type="date" value="' + start_date + '" readonly/>';
             }
 
             inlineHtml += '</div></div>';
@@ -211,27 +254,27 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             inlineHtml += '<div class="input-group">';
             inlineHtml += '<span class="input-group-addon" id="date_to_text">To</span>';
             if (isNullorEmpty(last_date)) {
-                inlineHtml += '<input id="date_to" class="form-control date_to" type="date">';
+                inlineHtml += '<input id="date_to" class="form-control date_to" type="date" readonly/>';
             } else {
-                inlineHtml += '<input id="date_to" class="form-control date_to" type="date" value="' + last_date + '">';
+                inlineHtml += '<input id="date_to" class="form-control date_to" type="date" value="' + last_date + '" readonly/>';
             }
 
             inlineHtml += '</div></div></div></div>';
 
-            inlineHtml +=
-                '<div class="form-group container filter_buttons_section hide">';
-            inlineHtml += '<div class="row">';
-            inlineHtml +=
-                '<div class="col-xs-2"></div>'
-            inlineHtml +=
-                '<div class="col-xs-4"><input type="button" value="APPLY FILTER" class="form-control btn btn-primary button-shadow" id="applyFilter" style="background-color: #095C7B;" /></div>'
-            inlineHtml +=
-                '<div class="col-xs-4"><input type="button" value="CLEAR FILTER" class="form-control btn btn-light button-shadow" id="clearFilter" style="background-color: #F0AECB;" /></div>'
-            inlineHtml +=
-                '<div class="col-xs-2"></div>'
+            // inlineHtml +=
+            //     '<div class="form-group container filter_buttons_section hide">';
+            // inlineHtml += '<div class="row">';
+            // inlineHtml +=
+            //     '<div class="col-xs-2"></div>'
+            // inlineHtml +=
+            //     '<div class="col-xs-4"><input type="button" value="APPLY FILTER" class="form-control btn btn-primary button-shadow" id="applyFilter" style="background-color: #095C7B;" /></div>'
+            // inlineHtml +=
+            //     '<div class="col-xs-4"><input type="button" value="CLEAR FILTER" class="form-control btn btn-light button-shadow" id="clearFilter" style="background-color: #F0AECB;" /></div>'
+            // inlineHtml +=
+            //     '<div class="col-xs-2"></div>'
 
-            inlineHtml += '</div>';
-            inlineHtml += '</div>';
+            // inlineHtml += '</div>';
+            // inlineHtml += '</div>';
 
             return inlineHtml;
         }
@@ -554,6 +597,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 });
             }
             return date_netsuite;
+        }
+
+        function GetFormattedDate(todayDate) {
+
+            var month = pad(todayDate.getMonth() + 1);
+            var day = pad(todayDate.getDate());
+            var year = (todayDate.getFullYear());
+            return year + "-" + month + "-" + day;
+        }
+
+        function pad(s) {
+            return (s < 10) ? '0' + s : s;
         }
 
         function isNullorEmpty(val) {

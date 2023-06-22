@@ -167,6 +167,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             $('.cust_dropdown_div').removeClass('hide');
             $('.period_dropdown_section').removeClass('hide');
             $('.datatable_div').removeClass('hide');
+            $('.instruction_div').removeClass('hide');
 
             $('.loading_section').addClass('hide');
 
@@ -285,7 +286,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             /**
              *  Auto Load Submit Search and Load Results on Page Initialisation
              */
-            
+
             submitSearch();
             var dataTable = $('#mpexusage-weekly_scans').DataTable();
             var dataTable2 = $('#mpexusage-monthly_scans').DataTable();
@@ -1286,6 +1287,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
             if (freq == 'weekly') {
+                console.log('All MP Products - Prod Weights/Weekly')
                 // All MP Products - Prod Weights/Weekly
                 var mpProdScansWeights = search.load({
                     type: 'customrecord_customer_product_stock',
@@ -1293,6 +1295,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 });
 
             } else if (freq == 'daily') {
+                console.log('All MP Products - Prod Weights/Daily')
                 // All MP Products - Prod Weights/Daily
                 var mpProdScansWeights = search.load({
                     type: 'customrecord_customer_product_stock',
@@ -1300,6 +1303,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 });
 
             } else {
+                console.log('All MP Products - Prod Weights/Monthly')
                 // All MP Products - Prod Weights/Monthly
                 var mpProdScansWeights = search.load({
                     type: 'customrecord_customer_product_stock',
@@ -1307,6 +1311,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 });
 
             }
+
+            var custID = currRec.getValue({
+                fieldId: 'custpage_custid',
+            });
+
+            console.log('custID ' + custID);
+
 
 
             if (!isNullorEmpty(date_from) && !isNullorEmpty(date_to)) {
@@ -1872,7 +1883,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable.rows.add(debtDataSet);
             datatable.draw();
 
-            saveCsvWeekly(csvSet);
+            // saveCsvWeekly(csvSet);
+            saveCSVOverview(csvSet);
 
             var data = datatable.rows().data();
 
@@ -1986,7 +1998,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable2.rows.add(debtDataSet2);
             datatable2.draw();
 
-            saveCsvMonthly(csvSet2);
+            // saveCsvMonthly(csvSet2);
+            saveCSVCustomerList(csvSet2);
 
             var data2 = datatable2.rows().data();
 
@@ -2025,10 +2038,10 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             } else {
                 for (var i = 0; i < data2.length; i++) {
                     month_year_cust_list.push(data2[i][1]);
-                    expSpeed_cust_list[data2[i][1]] = data2[i][2];
-                    sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][3]
-                    stdSpeed_cust_list[data2[i][1]] = data2[i][4]; // creating
-                    totalUsage_cust_list[data2[i][1]] = data2[i][5]; //
+                    expSpeed_cust_list[data2[i][1]] = data2[i][3];
+                    sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][4]
+                    stdSpeed_cust_list[data2[i][1]] = data2[i][5]; // creating
+                    totalUsage_cust_list[data2[i][1]] = data2[i][6]; //
 
                 }
             }
@@ -2127,7 +2140,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 datatable3.rows.add(debtDataSet3);
                 datatable3.draw();
 
-                saveCsvDaily(csvSet3);
+                // saveCsvDaily(csvSet3);
+                if (role != 1000) {
+                    saveCSVZeeList(csvSet3);
+                }
+
 
                 var data3 = datatable3.rows().data();
 
@@ -2297,7 +2314,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable4.rows.add(debtDataSet4);
             datatable4.draw();
 
-            saveCsvDaily(csvSet4, 'source');
+            // saveCsvDaily(csvSet4, 'source');
+            saveCSVSource(csvSet4, 'source');
 
             var data4 = dataTable4.rows().data();
 
@@ -2528,7 +2546,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable5.rows.add(debtDataSet5);
             datatable5.draw();
 
-            saveCsvDaily(csvSet5, 'source');
+            // saveCsvDaily(csvSet5, 'source');
+            saveCSVProdWeights(csvSet5);
 
             var data5 = dataTable5.rows().data();
 
@@ -3134,25 +3153,29 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             var today = new Date();
             today = formatDate(today);
             var val1 = currentRecord.get();
-            var csv_monthly = val1.getValue({
-                fieldId: 'custpage_table_csv_monthly',
+            var csv_overview = val1.getValue({
+                fieldId: 'custpage_table_csv_overview',
             });
-            var csv_weekly = val1.getValue({
-                fieldId: 'custpage_table_csv_weekly',
+            var csv_customer_list = val1.getValue({
+                fieldId: 'custpage_table_csv_customer_list',
             });
-            var csv_daily = val1.getValue({
-                fieldId: 'custpage_table_csv_daily',
+            var csv_source = val1.getValue({
+                fieldId: 'custpage_table_csv_source',
             });
+            var csv_prod_weights = val1.getValue({
+                fieldId: 'custpage_table_csv_prod_weights',
+            });
+
             today = replaceAll(today);
             var a = document.createElement("a");
             document.body.appendChild(a);
             a.style = "display: none";
             var content_type = 'text/csv';
-            var csvFileMonthly = new Blob([csv_monthly], {
+            var csvFileOverview = new Blob([csv_overview], {
                 type: content_type
             });
-            var url = window.URL.createObjectURL(csvFileMonthly);
-            var filename = 'Scans Monthly Usage_' + today + '.csv';
+            var url = window.URL.createObjectURL(csvFileOverview);
+            var filename = 'MP Products Scan - Overview_' + today + '.csv';
             a.href = url;
             a.download = filename;
             a.click();
@@ -3163,11 +3186,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             document.body.appendChild(a);
             a.style = "display: none";
             var content_type = 'text/csv';
-            var csvFileWeekly = new Blob([csv_weekly], {
+            var csvFileCustomerList = new Blob([csv_customer_list], {
                 type: content_type
             });
-            var url = window.URL.createObjectURL(csvFileWeekly);
-            var filename = 'Scans Weekly Usage_' + today + '.csv';
+            var url = window.URL.createObjectURL(csvFileCustomerList);
+            var filename = 'MP Products Scan - Customer List_' + today + '.csv';
             a.href = url;
             a.download = filename;
             a.click();
@@ -3178,11 +3201,26 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             document.body.appendChild(a);
             a.style = "display: none";
             var content_type = 'text/csv';
-            var csvFileDaily = new Blob([csv_daily], {
+            var csvFileSource = new Blob([csv_source], {
                 type: content_type
             });
-            var url = window.URL.createObjectURL(csvFileDaily);
-            var filename = 'Scans Daily Usage_' + today + '.csv';
+            var url = window.URL.createObjectURL(csvFileSource);
+            var filename = 'MP Products Scan - Source_' + today + '.csv';
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            today = replaceAll(today);
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            var content_type = 'text/csv';
+            var csvFileProdWeights = new Blob([csv_prod_weights], {
+                type: content_type
+            });
+            var url = window.URL.createObjectURL(csvFileProdWeights);
+            var filename = 'MP Products Scan - Product Weights_' + today + '.csv';
             a.href = url;
             a.download = filename;
             a.click();
@@ -3191,14 +3229,10 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
         }
 
-
-        /**
-         * Create the CSV and store it in the hidden field 'custpage_table_csv' as a string.
-         * @param {Array} ordersDataSet The `billsDataSet` created in `loadDatatable()`.
-         */
-        function saveCsvMonthly(ordersDataSet) {
+        //Save CSV for the Overview tab
+        function saveCSVOverview(ordersDataSet) {
             var sep = "sep=;";
-            var headers = ["Month", "Express Count", "Sendle AU Express Count", "Standard Count",
+            var headers = ["Period", "Express Count", "Sendle AU Express Count", "Standard Count",
                 "Total Count"
             ]
             headers = headers.join(';'); // .join(', ')
@@ -3214,7 +3248,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
             var val1 = currentRecord.get();
             val1.setValue({
-                fieldId: 'custpage_table_csv_monthly',
+                fieldId: 'custpage_table_csv_overview',
                 value: csv
             });
 
@@ -3222,9 +3256,10 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             return true;
         }
 
-        function saveCsvWeekly(ordersDataSet) {
+        //Save CSV for the Customer List tab
+        function saveCSVCustomerList(ordersDataSet) {
             var sep = "sep=;";
-            var headers = ["Month", "Express Count", "Sendle AU Express Count", "Standard Count",
+            var headers = ["Customer Name", "Franchisee", "Express Count", "Sendle AU Express Count", "Standard Count",
                 "Total Count"
             ]
             headers = headers.join(';'); // .join(', ')
@@ -3240,7 +3275,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
             var val1 = currentRecord.get();
             val1.setValue({
-                fieldId: 'custpage_table_csv_weekly',
+                fieldId: 'custpage_table_csv_customer_list',
                 value: csv
             });
 
@@ -3248,9 +3283,10 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             return true;
         }
 
-        function saveCsvDaily(ordersDataSet, type) {
+        //Save CSV for the Source tab
+        function saveCSVSource(ordersDataSet) {
             var sep = "sep=;";
-            var headers = ["Month", "Express Count", "Sendle AU Express Count", "Standard Count",
+            var headers = ["Period", "Manual", "Shopify", "Customer Portal", "Bulk",
                 "Total Count"
             ]
             headers = headers.join(';'); // .join(', ')
@@ -3266,13 +3302,42 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
             var val1 = currentRecord.get();
             val1.setValue({
-                fieldId: 'custpage_table_csv_daily',
+                fieldId: 'custpage_table_csv_source',
                 value: csv
             });
 
 
             return true;
         }
+
+        //Save CSV for the Product Weights tab
+        function saveCSVProdWeights(ordersDataSet) {
+            var sep = "sep=;";
+            var headers = ["Period", "Express - DL", "Express - C5", "Express - B4", "Express - 500g", "Express - 1kg", "Express - 3kg", "Express - 5kg", "Standard - 250g", "Standard - 500g", "Standard - 1kg", "Standard - 3kg", "Standard - 5kg", "Standard - 10kg", "Standard - 20kg", "Standard - 25kg"
+            ]
+            headers = headers.join(';'); // .join(', ')
+
+            var csv = sep + "\n" + headers + "\n";
+
+
+            ordersDataSet.forEach(function (row) {
+                row = row.join(';');
+                csv += row;
+                csv += "\n";
+            });
+
+            var val1 = currentRecord.get();
+            val1.setValue({
+                fieldId: 'custpage_table_csv_prod_weights',
+                value: csv
+            });
+
+
+            return true;
+        }
+
+
+
 
         function formatDate(testDate) {
             console.log('testDate: ' + testDate);

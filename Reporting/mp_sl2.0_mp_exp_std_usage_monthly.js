@@ -44,6 +44,43 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     last_date = null;
                 }
 
+                if (start_date == null && last_date == null) {
+                    var date = new Date();
+                    var y = date.getFullYear();
+                    var m = date.getMonth();
+                    //If begining of the year, show the current financial year, else show the current 
+                    if (m < 5) {
+                        //Calculate the Current inancial Year
+
+                        var firstDay = new Date(y, m, 1);
+                        var lastDay = new Date(y, m + 1, 0);
+
+                        firstDay.setHours(0, 0, 0, 0);
+                        lastDay.setHours(0, 0, 0, 0);
+
+                        if (m >= 6) {
+                            var first_july = new Date(y, 6, 1);
+                        } else {
+                            var first_july = new Date(y - 1, 6, 1);
+                        }
+                        date_from = first_july;
+                        date_to = lastDay;
+
+                        start_date = GetFormattedDate(date_from);
+                        last_date = GetFormattedDate(date_to);
+                    } else {
+                        //Calculate the Current Calendar Year
+                        var today_day_in_month = date.getDate();
+                        var today_date = new Date(Date.UTC(y, m, today_day_in_month))
+                        var first_day_in_year = new Date(Date.UTC(y, 0));
+                        var date_from = first_day_in_year.toISOString().split('T')[0];
+                        var date_to = today_date.toISOString().split('T')[0];
+
+                        start_date = date_from;
+                        last_date = last_date;
+                    }
+                }
+
 
                 var stateID = context.request.parameters.state;
                 if (isNullorEmpty(stateID)) {
@@ -101,24 +138,31 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
                 }
 
-                var inlineHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;}.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.button-shadow{box-shadow:5.5px 4.2px 5.9px rgba(0,0,0,.198),18.3px 14.1px 19.9px rgba(0,0,0,.292),82px 63px 89px rgba(0,0,0,.49)}</style>';
+                var inlineHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;}.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.button-shadow{box-shadow:5.5px 4.2px 5.9px rgba(0,0,0,.198)}</style>';
 
                 form.addField({
-                    id: 'custpage_table_csv_monthly',
+                    id: 'custpage_table_csv_overview',
                     type: ui.FieldType.TEXT,
                     label: 'Table CSV'
                 }).updateDisplayType({
                     displayType: ui.FieldDisplayType.HIDDEN
                 });
                 form.addField({
-                    id: 'custpage_table_csv_weekly',
+                    id: 'custpage_table_csv_customer_list',
                     type: ui.FieldType.TEXT,
                     label: 'Table CSV'
                 }).updateDisplayType({
                     displayType: ui.FieldDisplayType.HIDDEN
                 });
                 form.addField({
-                    id: 'custpage_table_csv_daily',
+                    id: 'custpage_table_csv_source',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                });
+                form.addField({
+                    id: 'custpage_table_csv_prod_weights',
                     type: ui.FieldType.TEXT,
                     label: 'Table CSV'
                 }).updateDisplayType({
@@ -147,6 +191,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
                 inlineHtml += loadingSection();
 
+                inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>Instructions</u></b></br></br></p></div></br>'
+
                 if (role != 1000) {
                     //Search: SMC - Franchisees
                     var searchZees = search.load({
@@ -162,7 +208,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
                 inlineHtml += dateFilterSection(start_date, last_date);
                 // inlineHtml += invoiceTypeSelection();
-                
+
 
                 // Tabs headers
                 inlineHtml +=
@@ -340,7 +386,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 '<div class="col-xs-2"></div>'
 
             inlineHtml += '</div>';
-            inlineHtml += '</div>';
+            inlineHtml += '</div></br></br>';
 
             return inlineHtml;
         }

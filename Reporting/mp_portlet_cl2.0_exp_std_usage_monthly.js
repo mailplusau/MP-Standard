@@ -158,8 +158,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
         function afterSubmit() {
             $('.tabs_div').removeClass('hide');
-            // $('.date_filter_section').removeClass('hide');
-            // $('.date_filter_div').removeClass('hide');
+            $('.date_filter_section').removeClass('hide');
+            $('.date_filter_div').removeClass('hide');
             $('.filter_buttons_section').removeClass('hide');
             // $('.zee_label_section').removeClass('hide');
             // $('.zee_dropdown_div').removeClass('hide');

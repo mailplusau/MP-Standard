@@ -60,14 +60,33 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 var last_date = GetFormattedDate(date_to);
             } else {
                 //Calculate the Current Calendar Year
-                var today_day_in_month = date.getDate();
-                var today_date = new Date(Date.UTC(y, m, today_day_in_month))
-                var first_day_in_year = new Date(Date.UTC(y, 0));
-                var date_from = first_day_in_year.toISOString().split('T')[0];
-                var date_to = today_date.toISOString().split('T')[0];
+                // var today_day_in_month = date.getDate();
+                // var today_date = new Date(Date.UTC(y, m, today_day_in_month))
+                // var first_day_in_year = new Date(Date.UTC(y, 0));
+                // var date_from = first_day_in_year.toISOString().split('T')[0];
+                // var date_to = today_date.toISOString().split('T')[0];
 
-                var start_date = date_from;
-                var last_date = last_date;
+                // var start_date = date_from;
+                // var last_date = last_date;
+                var i = 0;
+                var lastDay = new Date(y, m + 1, 0);
+                do {
+                    // months.push(m[parseInt((month > 9 ? "" : "0") + month)] + '-' + year);
+                    if (m == 1) {
+                        m = 12;
+                        y--;
+                    } else {
+                        m--;
+                    }
+                    i++;
+                } while (i < 4);
+
+                var firstDay = new Date(y, m, 1);
+                firstDay.setHours(0, 0, 0, 0);
+                lastDay.setHours(0, 0, 0, 0);
+
+                var start_date = GetFormattedDate(firstDay);
+                var last_date = GetFormattedDate(lastDay);
             }
 
             log.debug({

@@ -167,6 +167,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             // $('.cust_dropdown_div').removeClass('hide');
             // $('.period_dropdown_section').removeClass('hide');
             // $('.datatable_div').removeClass('hide');
+            $('.data-range_note').removeClass('hide');
 
             $('.loading_section').addClass('hide');
 

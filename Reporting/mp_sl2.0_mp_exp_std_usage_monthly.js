@@ -155,6 +155,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     displayType: ui.FieldDisplayType.HIDDEN
                 });
                 form.addField({
+                    id: 'custpage_table_csv_zee_list',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                });
+                form.addField({
                     id: 'custpage_table_csv_source',
                     type: ui.FieldType.TEXT,
                     label: 'Table CSV'

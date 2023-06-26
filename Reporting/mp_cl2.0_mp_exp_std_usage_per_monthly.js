@@ -339,15 +339,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     title: 'Period'
                 }, {
                     title: 'Express Usage'
-                }, {
-                    title: 'Sendle AU Express Usage'
+                    // }, {
+                    //     title: 'Sendle AU Express Usage'
                 }, {
                     title: 'Standard Usage'
                 }, {
                     title: 'Total Usage'
                 }],
                 columnDefs: [{
-                    targets: [1, 5],
+                    targets: [1, 4],
                     className: 'bolded'
                 }]
 
@@ -358,7 +358,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 data: debtDataSet2,
                 pageLength: 1000,
                 order: [
-                    [6, 'desc']
+                    [5, 'desc']
                 ],
                 columns: [{
                     title: 'View'
@@ -368,15 +368,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     title: 'Franchisee'
                 }, {
                     title: 'Express Usage'
-                }, {
-                    title: 'Sendle AU Express Usage'
+                    // }, {
+                    //     title: 'Sendle AU Express Usage'
                 }, {
                     title: 'Standard Usage'
                 }, {
                     title: 'Total Usage'
                 }],
                 columnDefs: [{
-                    targets: [1, 2, 6],
+                    targets: [1, 2, 5],
                     className: 'bolded'
                 }]
 
@@ -387,21 +387,21 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 data: debtDataSet3,
                 pageLength: 1000,
                 order: [
-                    [4, 'desc']
+                    [3, 'desc']
                 ],
                 columns: [{
                     title: 'Franchisee'
                 }, {
                     title: 'Express Usage'
-                }, {
-                    title: 'Sendle AU Express Usage'
+                    // }, {
+                    //     title: 'Sendle AU Express Usage'
                 }, {
                     title: 'Standard Usage'
                 }, {
                     title: 'Total Usage'
                 }],
                 columnDefs: [{
-                    targets: [0, 4],
+                    targets: [0, 3],
                     className: 'bolded'
                 }]
 
@@ -820,7 +820,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_cust_usage = mpexUsage;
+                            // sendle_au_express_cust_usage = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_cust_usage = mpexUsage;
                         }
@@ -844,7 +844,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_cust_usage += mpexUsage;
+                            // sendle_au_express_cust_usage += mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_cust_usage += mpexUsage;
                         }
@@ -883,7 +883,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_cust_usage = mpexUsage;
+                            // sendle_au_express_cust_usage = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_cust_usage = mpexUsage;
                         }
@@ -1787,9 +1787,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
                         debtDataSet.push([viewLinks, startofWeekDateFromatted,
-                            debt_row.express_speed, debt_row.sendle_au_express,
+                            debt_row.express_speed,
                             debt_row.standard_speed, debt_row.total_usage
                         ]);
+                        // debtDataSet.push([viewLinks, startofWeekDateFromatted,
+                        //     debt_row.express_speed, debt_row.sendle_au_express,
+                        //     debt_row.standard_speed, debt_row.total_usage
+                        // ]);
 
                         csvSet.push([startofWeekDateFromatted, debt_row.express_speed, debt_row.sendle_au_express,
                             debt_row.standard_speed, debt_row.total_usage
@@ -1823,9 +1827,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
                         debtDataSet.push([viewLinks, startDate,
-                            debt_row.express_speed, debt_row.sendle_au_express,
+                            debt_row.express_speed,
                             debt_row.standard_speed, debt_row.total_usage
                         ]);
+                        // debtDataSet.push([viewLinks, startDate,
+                        //     debt_row.express_speed, debt_row.sendle_au_express,
+                        //     debt_row.standard_speed, debt_row.total_usage
+                        // ]);
 
                         csvSet.push([startDate, debt_row.express_speed, debt_row.sendle_au_express,
                             debt_row.standard_speed, debt_row.total_usage
@@ -1864,9 +1872,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
                         debtDataSet.push([viewLinks, month,
-                            debt_row.express_speed, debt_row.sendle_au_express,
+                            debt_row.express_speed,
                             debt_row.standard_speed, debt_row.total_usage
                         ]);
+                        // debtDataSet.push([viewLinks, month,
+                        //     debt_row.express_speed, debt_row.sendle_au_express,
+                        //     debt_row.standard_speed, debt_row.total_usage
+                        // ]);
 
                         csvSet.push([month, debt_row.express_speed, debt_row.sendle_au_express,
                             debt_row.standard_speed, debt_row.total_usage
@@ -1982,9 +1994,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
                     debtDataSet2.push([viewLinks, debt_row.customerName, debt_row.franchiseeName,
-                        debt_row.express_speed, debt_row.sendle_au_express,
+                        debt_row.express_speed,
                         debt_row.standard_speed, debt_row.total_usage
                     ]);
+                    // debtDataSet2.push([viewLinks, debt_row.customerName, debt_row.franchiseeName,
+                    //     debt_row.express_speed, debt_row.sendle_au_express,
+                    //     debt_row.standard_speed, debt_row.total_usage
+                    // ]);
 
                     csvSet2.push([debt_row.customerName, debt_row.franchiseeName, debt_row.express_speed, debt_row.sendle_au_express,
                     debt_row.standard_speed, debt_row.total_usage
@@ -2019,18 +2035,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     for (var i = 0; i < 100; i++) {
                         month_year_cust_list.push(data2[i][1]);
                         expSpeed_cust_list[data2[i][1]] = data2[i][3];
-                        sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][4]
-                        stdSpeed_cust_list[data2[i][1]] = data2[i][5]; // creating
-                        totalUsage_cust_list[data2[i][1]] = data2[i][6]; //
+                        // sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][4]
+                        stdSpeed_cust_list[data2[i][1]] = data2[i][4]; // creating
+                        totalUsage_cust_list[data2[i][1]] = data2[i][5]; //
 
                     }
                 } else {
                     for (var i = 0; i < data2.length; i++) {
                         month_year_cust_list.push(data2[i][1]);
                         expSpeed_cust_list[data2[i][1]] = data2[i][3];
-                        sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][4]
-                        stdSpeed_cust_list[data2[i][1]] = data2[i][5]; // creating
-                        totalUsage_cust_list[data2[i][1]] = data2[i][6]; //
+                        // sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][4]
+                        stdSpeed_cust_list[data2[i][1]] = data2[i][4]; // creating
+                        totalUsage_cust_list[data2[i][1]] = data2[i][5]; //
 
                     }
                 }
@@ -2039,9 +2055,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 for (var i = 0; i < data2.length; i++) {
                     month_year_cust_list.push(data2[i][1]);
                     expSpeed_cust_list[data2[i][1]] = data2[i][3];
-                    sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][4]
-                    stdSpeed_cust_list[data2[i][1]] = data2[i][5]; // creating
-                    totalUsage_cust_list[data2[i][1]] = data2[i][6]; //
+                    // sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][4]
+                    stdSpeed_cust_list[data2[i][1]] = data2[i][4]; // creating
+                    totalUsage_cust_list[data2[i][1]] = data2[i][5]; //
 
                 }
             }
@@ -2123,6 +2139,10 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
 
+                        debtDataSet3.push([debt_row.franchiseeName,
+                        debt_row.express_speed,
+                        debt_row.standard_speed, debt_row.total_usage
+                        ]);
                         debtDataSet3.push([debt_row.franchiseeName,
                         debt_row.express_speed, debt_row.sendle_au_express,
                         debt_row.standard_speed, debt_row.total_usage
@@ -3034,13 +3054,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         style: {
                             fontWeight: 'bold',
                         }
-                    }, {
-                        name: 'Sendle AU Express',
-                        data: series_data8,
-                        color: '#108372',
-                        style: {
-                            fontWeight: 'bold',
-                        }
+                        // }, {
+                        //     name: 'Sendle AU Express',
+                        //     data: series_data8,
+                        //     color: '#108372',
+                        //     style: {
+                        //         fontWeight: 'bold',
+                        //     }
                     }, {
                         name: 'Standard',
                         data: series_data2,
@@ -3165,6 +3185,25 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             var csv_prod_weights = val1.getValue({
                 fieldId: 'custpage_table_csv_prod_weights',
             });
+            if (role != 1000) {
+                var csv_zee_list = val1.getValue({
+                    fieldId: 'custpage_table_csv_zee_list',
+                });
+                today = replaceAll(today);
+                var a = document.createElement("a");
+                document.body.appendChild(a);
+                a.style = "display: none";
+                var content_type = 'text/csv';
+                var csvFileZeeList = new Blob([csv_zee_list], {
+                    type: content_type
+                });
+                var url = window.URL.createObjectURL(csvFileZeeList);
+                var filename = 'MP Products Scan - Franchisee List_' + today + '.csv';
+                a.href = url;
+                a.download = filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }
 
             today = replaceAll(today);
             var a = document.createElement("a");
@@ -3210,7 +3249,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             a.download = filename;
             a.click();
             window.URL.revokeObjectURL(url);
-            
+
             today = replaceAll(today);
             var a = document.createElement("a");
             document.body.appendChild(a);
@@ -3257,6 +3296,31 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
 
         //Save CSV for the Customer List tab
+        function saveCSVZeeList(ordersDataSet) {
+            var sep = "sep=;";
+            var headers = ["Franchisee", "Express Count", "Sendle AU Express Count", "Standard Count",
+                "Total Count"
+            ]
+            headers = headers.join(';'); // .join(', ')
+
+            var csv = sep + "\n" + headers + "\n";
+
+
+            ordersDataSet.forEach(function (row) {
+                row = row.join(';');
+                csv += row;
+                csv += "\n";
+            });
+
+            var val1 = currentRecord.get();
+            val1.setValue({
+                fieldId: 'custpage_table_csv_zee_list',
+                value: csv
+            });
+
+
+            return true;
+        }
         function saveCSVCustomerList(ordersDataSet) {
             var sep = "sep=;";
             var headers = ["Customer Name", "Franchisee", "Express Count", "Sendle AU Express Count", "Standard Count",

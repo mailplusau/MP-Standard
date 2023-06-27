@@ -621,14 +621,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_monthly = mpexUsage;
+                            // sendle_au_express_monthly = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_monthly = mpexUsage;
                         }
                     } else if (integrationText == 'API Integration') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_monthly = mpexUsage;
+                            // sendle_au_express_monthly = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_monthly = mpexUsage;
                         }
@@ -645,14 +645,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_monthly += mpexUsage;
+                            // sendle_au_express_monthly += mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_monthly += mpexUsage;
                         }
                     } else if (integrationText == 'API Integration') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_monthly += mpexUsage;
+                            // sendle_au_express_monthly += mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_monthly += mpexUsage;
                         }
@@ -682,14 +682,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_monthly = mpexUsage;
+                            // sendle_au_express_monthly = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_monthly = mpexUsage;
                         }
                     } else if (integrationText == 'API Integration') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_monthly = mpexUsage;
+                            // sendle_au_express_monthly = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_monthly = mpexUsage;
                         }
@@ -1013,14 +1013,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_zee_usage = mpexUsage;
+                            // sendle_au_express_zee_usage = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_zee_usage = mpexUsage;
                         }
                     } else if (integrationText == 'API Integration') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_zee_usage = mpexUsage;
+                            // sendle_au_express_zee_usage = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_zee_usage = mpexUsage;
                         }
@@ -1037,14 +1037,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_zee_usage += mpexUsage;
+                            // sendle_au_express_zee_usage += mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_zee_usage += mpexUsage;
                         }
                     } else if (integrationText == 'API Integration') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_zee_usage += mpexUsage;
+                            // sendle_au_express_zee_usage += mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_zee_usage += mpexUsage;
                         }
@@ -1074,14 +1074,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_zee_usage = mpexUsage;
+                            // sendle_au_express_zee_usage = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_zee_usage = mpexUsage;
                         }
                     } else if (integrationText == 'API Integration') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            sendle_au_express_zee_usage = mpexUsage;
+                            // sendle_au_express_zee_usage = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_zee_usage = mpexUsage;
                         }
@@ -1914,9 +1914,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             for (var i = 0; i < data.length; i++) {
                 month_year.push(data[i][1]);
                 expSpeed[data[i][1]] = data[i][2];
-                sendleAUExpressSpeed[data[i][1]] = data[i][3]
-                stdSpeed[data[i][1]] = data[i][4]; // creating
-                totalUsage[data[i][1]] = data[i][5]; //
+                // sendleAUExpressSpeed[data[i][1]] = data[i][3]
+                stdSpeed[data[i][1]] = data[i][3]; // creating
+                totalUsage[data[i][1]] = data[i][4]; //
 
             }
             var count = {}; // creating object for getting categories with
@@ -2182,9 +2182,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 for (var i = 0; i < data3.length; i++) {
                     month_year_zee_list.push(data3[i][0]);
                     expSpeed_zee_list[data3[i][0]] = data3[i][1];
-                    sendleAUExpressSpeed_zee_list[data3[i][0]] = data3[i][2]
-                    stdSpeed_zee_list[data3[i][0]] = data3[i][3]; // creating
-                    totalUsage_zee_list[data3[i][0]] = data3[i][4]; //
+                    // sendleAUExpressSpeed_zee_list[data3[i][0]] = data3[i][2]
+                    stdSpeed_zee_list[data3[i][0]] = data3[i][2]; // creating
+                    totalUsage_zee_list[data3[i][0]] = data3[i][3]; //
 
                 }
                 var count3 = {}; // creating object for getting categories with

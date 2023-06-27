@@ -48,15 +48,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     var date = new Date();
                     var y = date.getFullYear();
                     var m = date.getMonth();
+
+                    var lastDay = new Date(y, m + 1, 0);
+
+                    lastDay.setHours(0, 0, 0, 0);
                     //If begining of the year, show the current financial year, else show the current 
                     if (m < 5) {
                         //Calculate the Current inancial Year
 
                         var firstDay = new Date(y, m, 1);
-                        var lastDay = new Date(y, m + 1, 0);
 
                         firstDay.setHours(0, 0, 0, 0);
-                        lastDay.setHours(0, 0, 0, 0);
+
 
                         if (m >= 6) {
                             var first_july = new Date(y, 6, 1);
@@ -77,7 +80,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                         var date_to = today_date.toISOString().split('T')[0];
 
                         start_date = date_from;
-                        last_date = last_date;
+                        last_date = GetFormattedDate(lastDay);
                     }
                 }
 
@@ -716,6 +719,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 });
             }
             return date_netsuite;
+        }
+
+        function GetFormattedDate(todayDate) {
+
+            var month = pad(todayDate.getMonth() + 1);
+            var day = pad(todayDate.getDate());
+            var year = (todayDate.getFullYear());
+            return year + "-" + month + "-" + day;
+        }
+
+        function pad(s) {
+            return (s < 10) ? '0' + s : s;
         }
 
         function isNullorEmpty(val) {

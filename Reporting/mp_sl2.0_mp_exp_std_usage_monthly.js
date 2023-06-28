@@ -201,7 +201,28 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
                 inlineHtml += loadingSection();
 
-                inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>Instructions</u></b></br><ol><li>Select the desired customer from the "Customer" drop-down menu.</li><li>Choose the specific period or date range you wish to view.</li><li>Click the "Apply Filter" button.</li></ol><b>Monthly Overview:</b></br>The left button above the graph represents the filter for a monthly overview of scanned parcels. Below the graph, you can switch to weekly or daily views to see the total scans for that respective period.</br></br><b>Customer List:</b></br>The middle left button above the graph provides a list of all customers and their product usage based on the applied filters.</br></br><b>Source:</b></br>The middle right button above the graph offers data regarding the barcode source (MPEX or Standard).</br></br><b>Product Weight:</b></br>The right button above the graph gives you information about the products used based on their weight perspective.</p></div></br>'
+                inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>Instructions</u></b></br><ol><li>Select the desired customer from the "Customer" drop-down menu.</li><li>Choose the specific period or date range you wish to view.</li><li>Click the "Apply Filter" button.</li></ol><b>Monthly Overview:</b></br>The left button above the graph represents the filter for a monthly overview of scanned parcels. Below the graph, you can switch to weekly or daily views to see the total scans for that respective period.</br></br><b>Customer List:</b></br>The middle left button above the graph provides a list of all customers and their product usage based on the applied filters.</br></br><b>Source:</b></br>The middle right button above the graph offers data regarding the barcode source (MPEX or Standard).</br></br><b>Product Weight:</b></br>The right button above the graph gives you information about the products used based on their weight perspective.</p><div class="form-group container"><div class="row"><div class="col-xs-4"></div><div class="col-xs-4"><input type="button" value="CLICK FOR USER GUIDE" class="form-control btn btn-primary" id="showGuide" style="background-color: #095C7B; border-radius: 30px;" /></div><div class="col-xs-4"></div></div></div></div></br>';
+
+                inlineHtml += stepByStepGuideModal();
+
+                inlineHtml +=
+                    '<div class="form-group container show_buttons_section hide">';
+                inlineHtml += '<div class="row">';
+                inlineHtml +=
+                    '<div class="col-xs-5"></div>'
+
+                inlineHtml +=
+                    '<div class="col-xs-2"><input type="button" value="SHOW FILTERS" class="form-control btn btn-primary" data-toggle="collapse" data-target="#collapseExample" id="show_filter" aria-expanded="false" aria-controls="collapseExample" style="background-color: #EAF044; color: #103d39" /></div>'
+                inlineHtml +=
+                    '<div class="col-xs-5"></div>'
+
+                inlineHtml += '</div>';
+                inlineHtml += '</div>';
+
+                inlineHtml += '</br>';
+
+                inlineHtml += '<div class="collapse" id="collapseExample"><div class="card card-body">'
+                inlineHtml += '<div>';
 
                 if (role != 1000) {
                     //Search: SMC - Franchisees
@@ -217,6 +238,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 }
 
                 inlineHtml += dateFilterSection(start_date, last_date);
+                inlineHtml += '</div></div></div>';
                 // inlineHtml += invoiceTypeSelection();
 
 
@@ -340,6 +362,35 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 //  }
                 // });
             }
+        }
+
+        /*
+         * PURPOSE : HTML code to generate the Modal Pop-up
+         *  PARAMS :  -
+         * RETURNS : HTML
+         *   NOTES :
+         */
+        function stepByStepGuideModal() {
+
+
+            var inlineHtml =
+                '<div id="myModal" class="modal" style="display: none; position: fixed; z-index: 1; padding-top: 100px;left: 0;top: 0;width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); "><div class="modal-content" style="position: absolute;transform: translate(-50%, -50%);background-color: #CFE0CE; margin: auto; padding: 0; border: 1px solid #888;width: fit-content; left: 50%;top: 50%; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19); -webkit-animation-name: animatetop;-webkit-animation-duration: 0.4s;animation-name: animatetop;animation-duration: 0.4s;"><div class="modal-header" style="padding: 2px 16px;text-align: center;"><span class="close" style="color: black;float: right;font-size: 28px;font-weight: bold;"">&times;</span><h1 class="modal-title" id="modal-title">STEP BY STEP GUIDE</h1></div>';
+
+            inlineHtml +=
+                '<div class="modal-body" style="padding: 2px 16px;">';
+            inlineHtml +=
+                '<div class="form-group container mpex_customer2_section">';
+            inlineHtml += '<div class="row">';
+            inlineHtml += '<iframe src="https://scribehow.com/embed/MP_Product_Scans__Monthly_Full_Report_View__r0DS8bGqS4abpfr_SyLyuA?as=scrollable&skipIntro=true&removeLogo=true" width="100%" height="640" allowfullscreen frameborder="0"></iframe>'
+
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
+
+            inlineHtml +=
+                '</div></div></div>';
+
+            return inlineHtml;
+
         }
 
         /**

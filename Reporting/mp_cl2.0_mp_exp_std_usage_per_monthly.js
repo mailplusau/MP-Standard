@@ -168,6 +168,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             $('.period_dropdown_section').removeClass('hide');
             $('.datatable_div').removeClass('hide');
             $('.instruction_div').removeClass('hide');
+            $('.show_buttons_section').removeClass('hide');
 
             $('.loading_section').addClass('hide');
 
@@ -199,6 +200,34 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
             debtDataSet6 = [];
             debt_set6 = [];
+
+            $("#showGuide").click(function () {
+
+                if ($('#show_filter').val() == 'HIDE FILTERS') {
+                    $('#show_filter').trigger('click');
+                }
+                $("#myModal").show();
+
+                return false;
+
+            })
+
+            $('.close').click(function () {
+                $("#myModal").hide();
+            });
+
+            $("#show_filter").click(function () {
+                if ($('#show_filter').val() == 'SHOW FILTERS') {
+                    $('#show_filter').val('HIDE FILTERS');
+                    $('#show_filter').css("background-color", "#F0AECB");
+                    $('#show_filter').css("color", "#103d39");
+                } else {
+                    $('#show_filter').val('SHOW FILTERS');
+                    $('#show_filter').css("background-color", "#EAF044 !important");
+                    $('#show_filter').css("color", "#103d39");
+                }
+
+            });
 
             if (!isNullorEmpty($('#period_dropdown option:selected').val())) {
                 selectDate();

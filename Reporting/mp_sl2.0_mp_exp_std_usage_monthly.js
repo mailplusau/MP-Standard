@@ -35,6 +35,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 if (zee == 0) {
                     zee = context.request.parameters.zee;
                 }
+                var barcodeSource = context.request.parameters.source
 
                 if (isNullorEmpty(start_date)) {
                     start_date = null;
@@ -238,6 +239,22 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 }
 
                 inlineHtml += dateFilterSection(start_date, last_date);
+
+                inlineHtml += sourceDropdownSelection(barcodeSource);
+                inlineHtml +=
+                    '<div class="form-group container filter_buttons_section hide">';
+                inlineHtml += '<div class="row">';
+                inlineHtml +=
+                    '<div class="col-xs-2"></div>'
+                inlineHtml +=
+                    '<div class="col-xs-4"><input type="button" value="APPLY FILTER" class="form-control btn btn-primary button-shadow" id="applyFilter" style="background-color: #095C7B;" /></div>'
+                inlineHtml +=
+                    '<div class="col-xs-4"><input type="button" value="CLEAR FILTER" class="form-control btn btn-light button-shadow" id="clearFilter" style="background-color: #F0AECB;" /></div>'
+                inlineHtml +=
+                    '<div class="col-xs-2"></div>'
+
+                inlineHtml += '</div>';
+                inlineHtml += '</div></br></br>';
                 inlineHtml += '</div></div></div>';
                 // inlineHtml += invoiceTypeSelection();
 
@@ -434,20 +451,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
             inlineHtml += '</div></div></div></div>';
 
-            inlineHtml +=
-                '<div class="form-group container filter_buttons_section hide">';
-            inlineHtml += '<div class="row">';
-            inlineHtml +=
-                '<div class="col-xs-2"></div>'
-            inlineHtml +=
-                '<div class="col-xs-4"><input type="button" value="APPLY FILTER" class="form-control btn btn-primary button-shadow" id="applyFilter" style="background-color: #095C7B;" /></div>'
-            inlineHtml +=
-                '<div class="col-xs-4"><input type="button" value="CLEAR FILTER" class="form-control btn btn-light button-shadow" id="clearFilter" style="background-color: #F0AECB;" /></div>'
-            inlineHtml +=
-                '<div class="col-xs-2"></div>'
 
-            inlineHtml += '</div>';
-            inlineHtml += '</div></br></br>';
 
             return inlineHtml;
         }
@@ -524,6 +528,88 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
                 return true;
             });
+            inlineHtml += '</select>';
+            inlineHtml += '</div></div></div></div>';
+
+            return inlineHtml;
+
+        }
+
+        /**
+        * 
+        * @param   {String}    date_from
+        * @param   {String}    date_to
+        * @return  {String}    `inlineHtml`
+        */
+        function sourceDropdownSelection(barcodeSource) {
+
+            /**
+             * 	Manual	        1
+                Shopify	        2	 
+                Customer Portal	3	 
+                Bulk	        4	 
+                API	            5
+             */
+
+            var inlineHtml = '<div class="form-group container source_label_section hide">';
+            inlineHtml += '<div class="row">';
+            inlineHtml += '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #095C7B;">BARCODE SOURCE</span></h4></div>';
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
+
+            inlineHtml += '<div class="form-group container source_dropdown_div hide">';
+            inlineHtml += '<div class="row">';
+            // Period dropdown field
+            inlineHtml += '<div class="col-xs-12 source_dropdown_div">';
+            inlineHtml += '<div class="input-group">';
+            inlineHtml += '<span class="input-group-addon" id="source_dropdown_text">Source</span>';
+            inlineHtml += '<select id="source_dropdown" class="form-control">';
+            inlineHtml += '<option value=""></option>';
+
+            if (barcodeSource == 1) {
+                inlineHtml += '<option value="1" selected>Manual</option>';
+                inlineHtml += '<option value="2">Shopify</option>';
+                inlineHtml += '<option value="3">Customer Portal</option>';
+                inlineHtml += '<option value="4">Bulk</option>';
+                inlineHtml += '<option value="5">API</option>';
+
+            } else if (barcodeSource == 2) {
+                inlineHtml += '<option value="1">Manual</option>';
+                inlineHtml += '<option value="2" selected>Shopify</option>';
+                inlineHtml += '<option value="3">Customer Portal</option>';
+                inlineHtml += '<option value="4">Bulk</option>';
+                inlineHtml += '<option value="5">API</option>';
+
+            } else if (barcodeSource == 3) {
+                inlineHtml += '<option value="1">Manual</option>';
+                inlineHtml += '<option value="2">Shopify</option>';
+                inlineHtml += '<option value="3" selected>Customer Portal</option>';
+                inlineHtml += '<option value="4">Bulk</option>';
+                inlineHtml += '<option value="5">API</option>';
+
+            } else if (barcodeSource == 4) {
+                inlineHtml += '<option value="1">Manual</option>';
+                inlineHtml += '<option value="2">Shopify</option>';
+                inlineHtml += '<option value="3">Customer Portal</option>';
+                inlineHtml += '<option value="4" selected>Bulk</option>';
+                inlineHtml += '<option value="5">API</option>';
+
+            } else if (barcodeSource == 5) {
+                inlineHtml += '<option value="1">Manual</option>';
+                inlineHtml += '<option value="2">Shopify</option>';
+                inlineHtml += '<option value="3">Customer Portal</option>';
+                inlineHtml += '<option value="4">Bulk</option>';
+                inlineHtml += '<option value="5" selected>API</option>';
+
+            } else {
+                inlineHtml += '<option value="1">Manual</option>';
+                inlineHtml += '<option value="2">Shopify</option>';
+                inlineHtml += '<option value="3">Customer Portal</option>';
+                inlineHtml += '<option value="4">Bulk</option>';
+                inlineHtml += '<option value="5">API</option>';
+
+            }
+
             inlineHtml += '</select>';
             inlineHtml += '</div></div></div></div>';
 

@@ -170,6 +170,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             $('.instruction_div').removeClass('hide');
             $('.show_buttons_section').removeClass('hide');
 
+            $('.source_label_section').removeClass('hide');
+            $('.source_dropdown_div').removeClass('hide');
+
             $('.loading_section').addClass('hide');
 
             $('#customer_benchmark_preview').show();
@@ -246,6 +249,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 var date_from = $('#date_from').val();
                 var date_to = $('#date_to').val();
                 zee = $('#zee_dropdown option:selected').val();
+                var barcodeSource = $('#source_dropdown option:selected').val();
 
                 var custid = $('#cust_dropdown option:selected').val();
 
@@ -258,7 +262,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     fieldId: 'custpage_freq',
                 });
 
-                var url = baseURL + "/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=" + date_from + '&last_date=' + date_to + '&zee=' + zee + '&custid=' + custid + '&freq=' + freq;
+                var url = baseURL + "/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=" + date_from + '&last_date=' + date_to + '&zee=' + zee + '&custid=' + custid + '&freq=' + freq + '&source=' + barcodeSource;
 
 
                 window.location.href = url;
@@ -522,11 +526,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             var date_to = $('#date_to').val();
             date_from = dateISOToNetsuite(date_from);
             date_to = dateISOToNetsuite(date_to);
+            var barcodeSource = $('#source_dropdown option:selected').val();
 
             console.log('Load DataTable Params: ' + date_from + ' | ' + date_to +
                 ' | ' + zee);
 
-            loadDebtRecord(date_from, date_to, zee);
+            loadDebtRecord(date_from, date_to, zee, barcodeSource);
 
             console.log('Loaded Results');
 
@@ -534,7 +539,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             afterSubmit();
         }
 
-        function loadDebtRecord(date_from, date_to, zee_id) {
+        function loadDebtRecord(date_from, date_to, zee_id, barcodeSource) {
 
             var currRec = currentRecord.get();
             var freq = currRec.getValue({
@@ -542,6 +547,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             });
 
             console.log('freq: ' + freq);
+            console.log('barcodeSource: ' + barcodeSource);
 
             if (freq == 'weekly') {
                 console.log('inside weekly search')
@@ -603,6 +609,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     join: 'custrecord_cust_prod_stock_customer',
                     operator: search.Operator.ANYOF,
                     values: parseInt(custID)
+                }));
+            }
+
+            if (!isNullorEmpty(barcodeSource)) {
+                mpScanMonthlyUsage.filters.push(search.createFilter({
+                    name: 'custrecord_barcode_source',
+                    join: null,
+                    operator: search.Operator.IS,
+                    values: barcodeSource
                 }));
             }
 
@@ -790,6 +805,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     join: 'custrecord_cust_prod_stock_customer',
                     operator: search.Operator.ANYOF,
                     values: parseInt(custID)
+                }));
+            }
+
+            if (!isNullorEmpty(barcodeSource)) {
+                mpProdsScansPerCustomerSearch.filters.push(search.createFilter({
+                    name: 'custrecord_barcode_source',
+                    join: null,
+                    operator: search.Operator.IS,
+                    values: barcodeSource
                 }));
             }
 
@@ -998,6 +1022,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 }));
             }
 
+            if (!isNullorEmpty(barcodeSource)) {
+                mpProdsScansPerZeeSearch.filters.push(search.createFilter({
+                    name: 'custrecord_barcode_source',
+                    join: null,
+                    operator: search.Operator.IS,
+                    values: barcodeSource
+                }));
+            }
+
             var count4 = 0;
             var oldFranchiseeName = null;
 
@@ -1196,6 +1229,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 }));
             }
 
+            if (!isNullorEmpty(barcodeSource)) {
+                mpProdScansSourceUsageResults.filters.push(search.createFilter({
+                    name: 'custrecord_barcode_source',
+                    join: null,
+                    operator: search.Operator.IS,
+                    values: barcodeSource
+                }));
+            }
+
             var old_date = null;
             var count4 = 0;
 
@@ -1379,6 +1421,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     join: 'custrecord_cust_prod_stock_customer',
                     operator: search.Operator.ANYOF,
                     values: parseInt(custID)
+                }));
+            }
+
+            if (!isNullorEmpty(barcodeSource)) {
+                mpProdScansWeights.filters.push(search.createFilter({
+                    name: 'custrecord_barcode_source',
+                    join: null,
+                    operator: search.Operator.IS,
+                    values: barcodeSource
                 }));
             }
 

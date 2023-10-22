@@ -137,7 +137,7 @@ function main() {
 
             var weeks_used = customer_record.getFieldValue(
                 'custentity_mp_std_weeks_used');
-            
+
             weeks_used = parseInt(weeks_used) + 1;
             customer_record.setFieldValue(
                 'custentity_mp_std_weeks_used', weeks_used);

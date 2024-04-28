@@ -46,16 +46,19 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         var total_usage = 0;
 
         var express_speed_monthly = 0;
+        var premium_speed_monthly = 0;
         var standard_speed_monthly = 0;
         var sendle_au_express_monthly = 0;
         var total_usage_monthly = 0;
 
         var express_speed_cust_usage = 0;
+        var premium_speed_cust_usage = 0;
         var standard_speed_cust_usage = 0;
         var sendle_au_express_cust_usage = 0;
         var total_usage_cust_usage = 0;
 
         var express_speed_zee_usage = 0;
+        var premium_speed_zee_usage = 0;
         var standard_speed_zee_usage = 0;
         var sendle_au_express_zee_usage = 0;
         var total_usage_zee_usage = 0;
@@ -81,6 +84,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         var std_10kg = 0;
         var std_20kg = 0;
         var std_25kg = 0;
+        var prm_1kg = 0;
+        var prm_3kg = 0;
+        var prm_5kg = 0;
+        var prm_10kg = 0;
+        var prm_20kg = 0;
         var total_weight_usage = 0;
 
         var total_months = 14;
@@ -297,7 +305,6 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             window.location.href = url;
         }
 
-
         function submitSearch() {
             // duringSubmit();
 
@@ -314,15 +321,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     title: 'Period'
                 }, {
                     title: 'Express Usage'
-                    // }, {
-                    //     title: 'Sendle AU Express Usage'
                 }, {
                     title: 'Standard Usage'
+                }, {
+                    title: 'Premium Usage'
                 }, {
                     title: 'Total Usage'
                 }],
                 columnDefs: [{
-                    targets: [1, 4],
+                    targets: [1, 5],
                     className: 'bolded'
                 }]
 
@@ -333,7 +340,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 data: debtDataSet2,
                 pageLength: 1000,
                 order: [
-                    [5, 'desc']
+                    [6, 'desc']
                 ],
                 columns: [{
                     title: 'View'
@@ -343,15 +350,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     title: 'Franchisee'
                 }, {
                     title: 'Express Usage'
-                    // }, {
-                    //     title: 'Sendle AU Express Usage'
                 }, {
                     title: 'Standard Usage'
+                }, {
+                    title: 'Premium Usage'
                 }, {
                     title: 'Total Usage'
                 }],
                 columnDefs: [{
-                    targets: [1, 2, 5],
+                    targets: [1, 2, 6],
                     className: 'bolded'
                 }]
 
@@ -362,21 +369,21 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 data: debtDataSet3,
                 pageLength: 1000,
                 order: [
-                    [3, 'desc']
+                    [4, 'desc']
                 ],
                 columns: [{
                     title: 'Franchisee'
                 }, {
                     title: 'Express Usage'
-                    // }, {
-                    //     title: 'Sendle AU Express Usage'
                 }, {
                     title: 'Standard Usage'
+                }, {
+                    title: 'Premium Usage'
                 }, {
                     title: 'Total Usage'
                 }],
                 columnDefs: [{
-                    targets: [0, 3],
+                    targets: [0, 4],
                     className: 'bolded'
                 }]
 
@@ -417,42 +424,52 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     [0, 'asc']
                 ],
                 columns: [{
-                    title: 'Period'
+                    title: 'Period' //0
                 }, {
-                    title: 'Express - DL'
+                    title: 'Express - DL' //1
                 }, {
-                    title: 'Express - C5'
+                    title: 'Express - C5' //2
                 }, {
-                    title: 'Express - B4'
+                    title: 'Express - B4' //3
                 }, {
-                    title: 'Express - 500g'
+                    title: 'Express - 500g' //4
                 }, {
-                    title: 'Express - 1kg'
+                    title: 'Express - 1kg' //5
                 }, {
-                    title: 'Express - 3kg'
+                    title: 'Express - 3kg' //6
                 }, {
-                    title: 'Express - 5kg'
+                    title: 'Express - 5kg' //7
                 }, {
-                    title: 'Standard - 250g'
+                    title: 'Standard - 250g' //8
                 }, {
-                    title: 'Standard - 500g'
+                    title: 'Standard - 500g' //9
                 }, {
-                    title: 'Standard - 1kg'
+                    title: 'Standard - 1kg' //10
                 }, {
-                    title: 'Standard - 3kg'
+                    title: 'Standard - 3kg' //11
                 }, {
-                    title: 'Standard - 5kg'
+                    title: 'Standard - 5kg' //12
                 }, {
-                    title: 'Standard - 10kg'
+                    title: 'Standard - 10kg' //13
                 }, {
-                    title: 'Standard - 20kg'
+                    title: 'Standard - 20kg' //14
                 }, {
-                    title: 'Standard - 25kg'
+                    title: 'Standard - 25kg' //15
                 }, {
-                    title: 'Total Usage'
+                    title: 'Premium - 1kg' //16
+                }, {
+                    title: 'Premium - 3kg' //17
+                }, {
+                    title: 'Premium - 5kg' //18
+                }, {
+                    title: 'Premium - 10kg' //19
+                }, {
+                    title: 'Premium - 20kg'//20
+                }, {
+                    title: 'Total Usage' //21
                 }],
                 columnDefs: [{
-                    targets: [0, 16],
+                    targets: [0, 21],
                     className: 'bolded'
                 }]
 
@@ -468,11 +485,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             var date_to = $('#date_to').val();
             date_from = dateISOToNetsuite(date_from);
             date_to = dateISOToNetsuite(date_to);
+            var barcodeSource = $('#source_dropdown option:selected').val();
 
             console.log('Load DataTable Params: ' + date_from + ' | ' + date_to +
                 ' | ' + zee);
 
-            loadDebtRecord(date_from, date_to, zee);
+            loadDebtRecord(date_from, date_to, zee, barcodeSource);
 
             console.log('Loaded Results');
 
@@ -480,7 +498,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             afterSubmit();
         }
 
-        function loadDebtRecord(date_from, date_to, zee_id) {
+        function loadDebtRecord(date_from, date_to, zee_id, barcodeSource) {
 
             var currRec = currentRecord.get();
             var freq = currRec.getValue({
@@ -488,6 +506,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             });
 
             console.log('freq: ' + freq);
+            console.log('barcodeSource: ' + barcodeSource);
 
             if (freq == 'weekly') {
                 console.log('inside weekly search')
@@ -552,6 +571,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 }));
             }
 
+            if (!isNullorEmpty(barcodeSource)) {
+                mpScanMonthlyUsage.filters.push(search.createFilter({
+                    name: 'custrecord_barcode_source',
+                    join: null,
+                    operator: search.Operator.IS,
+                    values: barcodeSource
+                }));
+            }
+
             var count2 = 0;
             var oldDate2 = null;
             var oldIntegration2 = null;
@@ -592,7 +620,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 if (count2 == 0) {
 
                     if (integrationText == '- None -') {
-                        express_speed_monthly = mpexUsage;
+                        if (deliverySpeed == 2 ||
+                            deliverySpeedText == '- None -') {
+                            express_speed_monthly = mpexUsage;
+                        } else if (deliverySpeed == 4) {
+                            premium_speed_monthly = mpexUsage;
+                        }
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
@@ -610,13 +643,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     }
 
 
-                    total_usage_monthly = express_speed_monthly + standard_speed_monthly + sendle_au_express_monthly;
+                    total_usage_monthly = express_speed_monthly + standard_speed_monthly + sendle_au_express_monthly + premium_speed_monthly;
 
                 } else if (oldDate2 != null &&
                     oldDate2 == dateUsed) {
 
                     if (integrationText == '- None -') {
-                        express_speed_monthly += mpexUsage;
+                        if (deliverySpeed == 2 ||
+                            deliverySpeedText == '- None -') {
+                            express_speed_monthly += mpexUsage;
+                        } else if (deliverySpeed == 4) {
+                            premium_speed_monthly += mpexUsage;
+                        }
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
@@ -633,7 +671,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         }
                     }
 
-                    total_usage_monthly = express_speed_monthly + standard_speed_monthly + sendle_au_express_monthly;
+                    total_usage_monthly = express_speed_monthly + standard_speed_monthly + sendle_au_express_monthly + premium_speed_monthly;
 
 
                 } else if (oldDate2 != null &&
@@ -644,16 +682,23 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         express_speed: express_speed_monthly,
                         sendle_au_express: sendle_au_express_monthly,
                         standard_speed: standard_speed_monthly,
-                        total_usage: total_usage_monthly
+                        total_usage: total_usage_monthly,
+                        premium_speed: premium_speed_monthly
                     });
 
                     express_speed_monthly = 0;
                     standard_speed_monthly = 0;
                     sendle_au_express_monthly = 0;
                     total_usage_monthly = 0;
+                    premium_speed_monthly = 0;
 
                     if (integrationText == '- None -') {
-                        express_speed_monthly = mpexUsage;
+                        if (deliverySpeed == 2 ||
+                            deliverySpeedText == '- None -') {
+                            express_speed_monthly = mpexUsage;
+                        } else if (deliverySpeed == 4) {
+                            premium_speed_monthly = mpexUsage;
+                        }
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
@@ -670,7 +715,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         }
                     }
 
-                    total_usage_monthly = express_speed_monthly + standard_speed_monthly + sendle_au_express_monthly;
+                    total_usage_monthly = express_speed_monthly + standard_speed_monthly + sendle_au_express_monthly + premium_speed_monthly;
 
 
                 }
@@ -687,7 +732,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     express_speed: express_speed_monthly,
                     sendle_au_express: sendle_au_express_monthly,
                     standard_speed: standard_speed_monthly,
-                    total_usage: total_usage_monthly
+                    total_usage: total_usage_monthly,
+                    premium_speed: premium_speed_monthly
                 });
 
             }
@@ -736,6 +782,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     join: 'custrecord_cust_prod_stock_customer',
                     operator: search.Operator.ANYOF,
                     values: parseInt(custID)
+                }));
+            }
+
+            if (!isNullorEmpty(barcodeSource)) {
+                mpProdsScansPerCustomerSearch.filters.push(search.createFilter({
+                    name: 'custrecord_barcode_source',
+                    join: null,
+                    operator: search.Operator.IS,
+                    values: barcodeSource
                 }));
             }
 
@@ -791,7 +846,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 if (count3 == 0) {
 
                     if (integrationText == '- None -') {
-                        express_speed_cust_usage = mpexUsage;
+                        if (deliverySpeed == 2 ||
+                            deliverySpeedText == '- None -') {
+                            express_speed_cust_usage = mpexUsage;
+                        } else if (deliverySpeed == 4) {
+                            premium_speed_cust_usage = mpexUsage;
+                        }
+
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
@@ -802,20 +863,25 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'API Integration') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            // sendle_au_express_cust_usage = mpexUsage;
+                            sendle_au_express_cust_usage = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_cust_usage = mpexUsage;
                         }
                     }
 
 
-                    total_usage_cust_usage = express_speed_cust_usage + standard_speed_cust_usage + sendle_au_express_cust_usage;
+                    total_usage_cust_usage = express_speed_cust_usage + standard_speed_cust_usage + sendle_au_express_cust_usage + premium_speed_cust_usage;
 
                 } else if (oldCustomerName != null &&
                     oldCustomerName == customerName) {
 
                     if (integrationText == '- None -') {
-                        express_speed_cust_usage += mpexUsage;
+                        if (deliverySpeed == 2 ||
+                            deliverySpeedText == '- None -') {
+                            express_speed_cust_usage += mpexUsage;
+                        } else if (deliverySpeed == 4) {
+                            premium_speed_cust_usage += mpexUsage;
+                        }
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
@@ -826,13 +892,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'API Integration') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            // sendle_au_express_cust_usage += mpexUsage;
+                            sendle_au_express_cust_usage += mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_cust_usage += mpexUsage;
                         }
                     }
 
-                    total_usage_cust_usage = express_speed_cust_usage + standard_speed_cust_usage + sendle_au_express_cust_usage;
+                    total_usage_cust_usage = express_speed_cust_usage + standard_speed_cust_usage + sendle_au_express_cust_usage + premium_speed_cust_usage;
 
 
                 } else if (oldCustomerName != null &&
@@ -845,16 +911,23 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         express_speed: express_speed_cust_usage,
                         sendle_au_express: sendle_au_express_cust_usage,
                         standard_speed: standard_speed_cust_usage,
-                        total_usage: total_usage_cust_usage
+                        total_usage: total_usage_cust_usage,
+                        premium_speed: premium_speed_cust_usage
                     });
 
                     express_speed_cust_usage = 0;
                     standard_speed_cust_usage = 0;
                     sendle_au_express_cust_usage = 0;
+                    premium_speed_cust_usage = 0;
                     total_usage_cust_usage = 0;
 
                     if (integrationText == '- None -') {
-                        express_speed_cust_usage = mpexUsage;
+                        if (deliverySpeed == 2 ||
+                            deliverySpeedText == '- None -') {
+                            express_speed_cust_usage = mpexUsage;
+                        } else if (deliverySpeed == 4) {
+                            premium_speed_cust_usage = mpexUsage;
+                        }
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
@@ -865,13 +938,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (integrationText == 'API Integration') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
-                            // sendle_au_express_cust_usage = mpexUsage;
+                            sendle_au_express_cust_usage = mpexUsage;
                         } else if (deliverySpeed == 1) {
                             standard_speed_cust_usage = mpexUsage;
                         }
                     }
 
-                    total_usage_cust_usage = express_speed_cust_usage + standard_speed_cust_usage + sendle_au_express_cust_usage;
+                    total_usage_cust_usage = express_speed_cust_usage + standard_speed_cust_usage + sendle_au_express_cust_usage + premium_speed_cust_usage;
 
 
                 }
@@ -891,7 +964,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     express_speed: express_speed_cust_usage,
                     sendle_au_express: sendle_au_express_cust_usage,
                     standard_speed: standard_speed_cust_usage,
-                    total_usage: total_usage_cust_usage
+                    total_usage: total_usage_cust_usage,
+                    premium_speed: premium_speed_cust_usage
                 });
 
             }
@@ -944,6 +1018,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 }));
             }
 
+            if (!isNullorEmpty(barcodeSource)) {
+                mpProdsScansPerZeeSearch.filters.push(search.createFilter({
+                    name: 'custrecord_barcode_source',
+                    join: null,
+                    operator: search.Operator.IS,
+                    values: barcodeSource
+                }));
+            }
+
             var count4 = 0;
             var oldFranchiseeName = null;
 
@@ -984,7 +1067,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 if (count4 == 0) {
 
                     if (integrationText == '- None -') {
-                        express_speed_zee_usage = mpexUsage;
+                        if (deliverySpeed == 2 ||
+                            deliverySpeedText == '- None -') {
+                            express_speed_zee_usage = mpexUsage;
+                        } else if (deliverySpeed == 4) {
+                            premium_speed_zee_usage = mpexUsage;
+                        }
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
@@ -1002,13 +1090,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     }
 
 
-                    total_usage_zee_usage = express_speed_zee_usage + standard_speed_zee_usage + sendle_au_express_zee_usage;
+                    total_usage_zee_usage = express_speed_zee_usage + standard_speed_zee_usage + sendle_au_express_zee_usage + premium_speed_zee_usage;
 
                 } else if (oldFranchiseeName != null &&
                     oldFranchiseeName == franchiseeName) {
 
                     if (integrationText == '- None -') {
-                        express_speed_zee_usage += mpexUsage;
+                        if (deliverySpeed == 2 ||
+                            deliverySpeedText == '- None -') {
+                            express_speed_zee_usage += mpexUsage;
+                        } else if (deliverySpeed == 4) {
+                            premium_speed_zee_usage += mpexUsage;
+                        }
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
@@ -1025,7 +1118,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         }
                     }
 
-                    total_usage_zee_usage = express_speed_zee_usage + standard_speed_zee_usage + sendle_au_express_zee_usage;
+                    total_usage_zee_usage = express_speed_zee_usage + standard_speed_zee_usage + sendle_au_express_zee_usage + premium_speed_zee_usage;
 
 
                 } else if (oldFranchiseeName != null &&
@@ -1036,16 +1129,23 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         express_speed: express_speed_zee_usage,
                         sendle_au_express: sendle_au_express_zee_usage,
                         standard_speed: standard_speed_zee_usage,
-                        total_usage: total_usage_zee_usage
+                        total_usage: total_usage_zee_usage,
+                        premium_speed: premium_speed_zee_usage
                     });
 
                     express_speed_zee_usage = 0;
                     standard_speed_zee_usage = 0;
                     sendle_au_express_zee_usage = 0;
+                    premium_speed_zee_usage = 0;
                     total_usage_zee_usage = 0;
 
                     if (integrationText == '- None -') {
-                        express_speed_zee_usage = mpexUsage;
+                        if (deliverySpeed == 2 ||
+                            deliverySpeedText == '- None -') {
+                            express_speed_zee_usage = mpexUsage;
+                        } else if (deliverySpeed == 4) {
+                            premium_speed_zee_usage = mpexUsage;
+                        }
                     } else if (integrationText == 'Sendle') {
                         if (deliverySpeed == 2 ||
                             deliverySpeedText == '- None -') {
@@ -1062,7 +1162,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         }
                     }
 
-                    total_usage_zee_usage = express_speed_zee_usage + standard_speed_zee_usage + sendle_au_express_zee_usage;
+                    total_usage_zee_usage = express_speed_zee_usage + standard_speed_zee_usage + sendle_au_express_zee_usage + premium_speed_zee_usage;
 
 
                 }
@@ -1078,7 +1178,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     express_speed: express_speed_zee_usage,
                     sendle_au_express: sendle_au_express_zee_usage,
                     standard_speed: standard_speed_zee_usage,
-                    total_usage: total_usage_zee_usage
+                    total_usage: total_usage_zee_usage,
+                    premium_speed: premium_speed_zee_usage
                 });
 
             }
@@ -1139,6 +1240,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     join: 'custrecord_cust_prod_stock_customer',
                     operator: search.Operator.ANYOF,
                     values: parseInt(custID)
+                }));
+            }
+
+            if (!isNullorEmpty(barcodeSource)) {
+                mpProdScansSourceUsageResults.filters.push(search.createFilter({
+                    name: 'custrecord_barcode_source',
+                    join: null,
+                    operator: search.Operator.IS,
+                    values: barcodeSource
                 }));
             }
 
@@ -1262,6 +1372,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
             if (freq == 'weekly') {
+                console.log('All MP Products - Prod Weights/Weekly')
                 // All MP Products - Prod Weights/Weekly
                 var mpProdScansWeights = search.load({
                     type: 'customrecord_customer_product_stock',
@@ -1269,6 +1380,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 });
 
             } else if (freq == 'daily') {
+                console.log('All MP Products - Prod Weights/Daily')
                 // All MP Products - Prod Weights/Daily
                 var mpProdScansWeights = search.load({
                     type: 'customrecord_customer_product_stock',
@@ -1276,6 +1388,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 });
 
             } else {
+                console.log('All MP Products - Prod Weights/Monthly')
                 // All MP Products - Prod Weights/Monthly
                 var mpProdScansWeights = search.load({
                     type: 'customrecord_customer_product_stock',
@@ -1283,6 +1396,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 });
 
             }
+
+            var custID = currRec.getValue({
+                fieldId: 'custpage_custid',
+            });
+
+            console.log('custID ' + custID);
+
 
 
             if (!isNullorEmpty(date_from) && !isNullorEmpty(date_to)) {
@@ -1315,6 +1435,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     join: 'custrecord_cust_prod_stock_customer',
                     operator: search.Operator.ANYOF,
                     values: parseInt(custID)
+                }));
+            }
+
+            if (!isNullorEmpty(barcodeSource)) {
+                mpProdScansWeights.filters.push(search.createFilter({
+                    name: 'custrecord_barcode_source',
+                    join: null,
+                    operator: search.Operator.IS,
+                    values: barcodeSource
                 }));
             }
 
@@ -1408,6 +1537,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                     } else if (prodWeight == 7) {
                                         exp_dl = mpexUsage
                                     }
+                                } else if (deliverySpeed == 4) {
+                                    if (prodWeight == 1) {
+                                        prm_5kg = mpexUsage;
+                                    } else if (prodWeight == 2) {
+                                        prm_3kg = mpexUsage
+                                    } else if (prodWeight == 3) {
+                                        prm_1kg = mpexUsage
+                                    } else if (prodWeight == 8) {
+                                        prm_10kg = mpexUsage
+                                    } else if (prodWeight == 11) {
+                                        prm_20kg = mpexUsage
+                                    }
                                 }
 
                             } else if (integrationText == 'Sendle') {
@@ -1450,7 +1591,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                     }
                                 }
                             }
-                            total_weight_usage = exp_dl + exp_c5 + exp_b4 + exp_500g + exp_1kg + exp_3kg + exp_5kg + std_250g + std_500g + std_1kg + std_3kg + std_5kg + std_10kg + std_20kg + std_25kg;
+                            total_weight_usage = exp_dl + exp_c5 + exp_b4 + exp_500g + exp_1kg + exp_3kg + exp_5kg + std_250g + std_500g + std_1kg + std_3kg + std_5kg + std_10kg + std_20kg + std_25kg + prm_1kg + prm_3kg + prm_5kg + prm_10kg + prm_20kg;
 
                         } else if (old_date != null &&
                             old_date == dateUsed) {
@@ -1471,6 +1612,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                         exp_c5 += mpexUsage
                                     } else if (prodWeight == 7) {
                                         exp_dl += mpexUsage
+                                    }
+                                } else if (deliverySpeed == 4) {
+                                    if (prodWeight == 1) {
+                                        prm_5kg = mpexUsage;
+                                    } else if (prodWeight == 2) {
+                                        prm_3kg = mpexUsage
+                                    } else if (prodWeight == 3) {
+                                        prm_1kg = mpexUsage
+                                    } else if (prodWeight == 8) {
+                                        prm_10kg = mpexUsage
+                                    } else if (prodWeight == 11) {
+                                        prm_20kg = mpexUsage
                                     }
                                 }
 
@@ -1514,7 +1667,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                     }
                                 }
                             }
-                            total_weight_usage = exp_dl + exp_c5 + exp_b4 + exp_500g + exp_1kg + exp_3kg + exp_5kg + std_250g + std_500g + std_1kg + std_3kg + std_5kg + std_10kg + std_20kg + std_25kg;
+                            total_weight_usage = exp_dl + exp_c5 + exp_b4 + exp_500g + exp_1kg + exp_3kg + exp_5kg + std_250g + std_500g + std_1kg + std_3kg + std_5kg + std_10kg + std_20kg + std_25kg + prm_1kg + prm_3kg + prm_5kg + prm_10kg + prm_20kg;
                         } else if (old_date != null &&
                             old_date != dateUsed) {
                             debt_set5.push({
@@ -1534,7 +1687,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 std_10kg: std_10kg,
                                 std_20kg: std_20kg,
                                 std_25kg: std_25kg,
-                                total_weight_usage: total_weight_usage
+                                total_weight_usage: total_weight_usage,
+                                prm_1kg: prm_1kg,
+                                prm_3kg: prm_3kg,
+                                prm_5kg: prm_5kg,
+                                prm_10kg: prm_10kg,
+                                prm_20kg: prm_20kg,
                             });
 
                             exp_dl = 0;
@@ -1553,6 +1711,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                             std_20kg = 0;
                             std_25kg = 0;
                             total_weight_usage = 0;
+                            prm_1kg = 0;
+                            prm_3kg = 0;
+                            prm_5kg = 0;
+                            prm_10kg = 0;
+                            prm_20kg = 0;
 
 
                             if (integrationText == '- None -') {
@@ -1572,6 +1735,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                         exp_c5 = mpexUsage
                                     } else if (prodWeight == 7) {
                                         exp_dl = mpexUsage
+                                    }
+                                } else if (deliverySpeed == 4) {
+                                    if (prodWeight == 1) {
+                                        prm_5kg = mpexUsage;
+                                    } else if (prodWeight == 2) {
+                                        prm_3kg = mpexUsage
+                                    } else if (prodWeight == 3) {
+                                        prm_1kg = mpexUsage
+                                    } else if (prodWeight == 8) {
+                                        prm_10kg = mpexUsage
+                                    } else if (prodWeight == 11) {
+                                        prm_20kg = mpexUsage
                                     }
                                 }
 
@@ -1615,7 +1790,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                     }
                                 }
                             }
-                            total_weight_usage = exp_dl + exp_c5 + exp_b4 + exp_500g + exp_1kg + exp_3kg + exp_5kg + std_250g + std_500g + std_1kg + std_3kg + std_5kg + std_10kg + std_20kg + std_25kg;
+                            total_weight_usage = exp_dl + exp_c5 + exp_b4 + exp_500g + exp_1kg + exp_3kg + exp_5kg + std_250g + std_500g + std_1kg + std_3kg + std_5kg + std_10kg + std_20kg + std_25kg + prm_1kg + prm_3kg + prm_5kg + prm_10kg + prm_20kg;
                         }
 
                         old_date = dateUsed;
@@ -1641,13 +1816,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     std_10kg: std_10kg,
                     std_20kg: std_20kg,
                     std_25kg: std_25kg,
-                    total_weight_usage: total_weight_usage
+                    total_weight_usage: total_weight_usage,
+                    prm_1kg: prm_1kg,
+                    prm_3kg: prm_3kg,
+                    prm_5kg: prm_5kg,
+                    prm_10kg: prm_10kg,
+                    prm_20kg: prm_20kg,
                 });
             }
 
             console.log('debt_set(Monthly Overview): ' + debt_set)
-            console.log('debt_set2(Customer List): ' + JSON.stringify(debt_set2));
-            console.log('debt_set3(Zee List): ' + debt_set3)
+            console.log('debt_set2(Customer List): ' + debt_set2)
+            console.log('debt_set3(Zee List): ' + JSON.stringify(debt_set3))
             console.log('debt_set4(Source List): ' + debt_set4)
             console.log('debt_set5(Product Weights): ' + debt_set5)
             loadDatatable(debt_set, debt_set2, debt_set3, debt_set4, debt_set5);
@@ -1751,17 +1931,17 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
 
+                        debtDataSet.push([viewLinks, startofWeekDateFromatted,
+                            debt_row.express_speed,
+                            debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
+                        ]);
                         // debtDataSet.push([viewLinks, startofWeekDateFromatted,
                         //     debt_row.express_speed, debt_row.sendle_au_express,
                         //     debt_row.standard_speed, debt_row.total_usage
                         // ]);
-                        debtDataSet.push([viewLinks, startofWeekDateFromatted,
-                            debt_row.express_speed,
-                            debt_row.standard_speed, debt_row.total_usage
-                        ]);
 
                         csvSet.push([startofWeekDateFromatted, debt_row.express_speed, debt_row.sendle_au_express,
-                            debt_row.standard_speed, debt_row.total_usage
+                            debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
                         ]);
                     } else if (freq == 'daily') {
                         var splitMonth = month.split('/');
@@ -1793,15 +1973,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                         debtDataSet.push([viewLinks, startDate,
                             debt_row.express_speed,
-                            debt_row.standard_speed, debt_row.total_usage
+                            debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
                         ]);
                         // debtDataSet.push([viewLinks, startDate,
                         //     debt_row.express_speed, debt_row.sendle_au_express,
                         //     debt_row.standard_speed, debt_row.total_usage
                         // ]);
 
-                        csvSet.push([startDate, debt_row.express_speed, debt_row.sendle_au_express,
-                            debt_row.standard_speed, debt_row.total_usage
+                        csvSet.push([startDate, debt_row.express_speed,
+                            debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
                         ]);
                     } else {
                         var splitMonth = month.split('-');
@@ -1838,15 +2018,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                         debtDataSet.push([viewLinks, month,
                             debt_row.express_speed,
-                            debt_row.standard_speed, debt_row.total_usage
+                            debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
                         ]);
                         // debtDataSet.push([viewLinks, month,
                         //     debt_row.express_speed, debt_row.sendle_au_express,
                         //     debt_row.standard_speed, debt_row.total_usage
                         // ]);
 
-                        csvSet.push([month, debt_row.express_speed, debt_row.sendle_au_express,
-                            debt_row.standard_speed, debt_row.total_usage
+                        csvSet.push([month, debt_row.express_speed,
+                            debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
                         ]);
                     }
 
@@ -1860,7 +2040,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable.rows.add(debtDataSet);
             datatable.draw();
 
-            saveCsvWeekly(csvSet);
+            // saveCsvWeekly(csvSet);
+            saveCSVOverview(csvSet);
 
             var data = datatable.rows().data();
 
@@ -1869,7 +2050,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             // type in array.
             var expSpeed = []; // creating array for storing browser
             // type in array.
-            var sendleAUExpressSpeed = [];
+            var premiumSpeed = [];
             var stdSpeed = []; // creating array for storing browser
             // type in array
             var totalUsage = []; // creating array for storing browser
@@ -1878,9 +2059,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             for (var i = 0; i < data.length; i++) {
                 month_year.push(data[i][1]);
                 expSpeed[data[i][1]] = data[i][2];
-                // sendleAUExpressSpeed[data[i][1]] = data[i][3]
+                premiumSpeed[data[i][1]] = data[i][4]
                 stdSpeed[data[i][1]] = data[i][3]; // creating
-                totalUsage[data[i][1]] = data[i][4]; //
+                totalUsage[data[i][1]] = data[i][5]; //
 
             }
             var count = {}; // creating object for getting categories with
@@ -1900,7 +2081,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             // categories
             Object.keys(expSpeed).map(function (item, key) {
                 series_data6.push(parseInt(expSpeed[item]));
-                series_data8.push(parseInt(sendleAUExpressSpeed[item]));
+                series_data8.push(parseInt(premiumSpeed[item]));
                 series_data7.push(parseInt(stdSpeed[item]));
                 series_data10.push(parseInt(totalUsage[item]));
                 categores4.push(item)
@@ -1959,26 +2140,27 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                     debtDataSet2.push([viewLinks, debt_row.customerName, debt_row.franchiseeName,
                         debt_row.express_speed,
-                        debt_row.standard_speed, debt_row.total_usage
+                        debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
                     ]);
                     // debtDataSet2.push([viewLinks, debt_row.customerName, debt_row.franchiseeName,
                     //     debt_row.express_speed, debt_row.sendle_au_express,
                     //     debt_row.standard_speed, debt_row.total_usage
                     // ]);
 
-                    csvSet2.push([debt_row.customerName, debt_row.franchiseeName, debt_row.express_speed, debt_row.sendle_au_express,
-                    debt_row.standard_speed, debt_row.total_usage
+                    csvSet2.push([debt_row.customerName, debt_row.franchiseeName, debt_row.express_speed,
+                    debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
                     ]);
 
                 });
             }
-            console.log(JSON.stringify(debtDataSet2));
+            console.log(debtDataSet2)
             var datatable2 = $('#mpexusage-customer_list').DataTable();
             datatable2.clear();
             datatable2.rows.add(debtDataSet2);
             datatable2.draw();
 
-            saveCsvMonthly(csvSet2);
+            // saveCsvMonthly(csvSet2);
+            saveCSVCustomerList(csvSet2);
 
             var data2 = datatable2.rows().data();
 
@@ -1987,7 +2169,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             // type in array.
             var expSpeed_cust_list = []; // creating array for storing browser
             // type in array.
-            var sendleAUExpressSpeed_cust_list = [];
+            var prmSpeed_cust_list = [];
             var stdSpeed_cust_list = []; // creating array for storing browser
             // type in array
             var totalUsage_cust_list = []; // creating array for storing browser
@@ -1998,18 +2180,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     for (var i = 0; i < 100; i++) {
                         month_year_cust_list.push(data2[i][1]);
                         expSpeed_cust_list[data2[i][1]] = data2[i][3];
-                        // sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][4]
+                        prmSpeed_cust_list[data2[i][1]] = data2[i][5]
                         stdSpeed_cust_list[data2[i][1]] = data2[i][4]; // creating
-                        totalUsage_cust_list[data2[i][1]] = data2[i][5]; //
+                        totalUsage_cust_list[data2[i][1]] = data2[i][6]; //
 
                     }
                 } else {
                     for (var i = 0; i < data2.length; i++) {
                         month_year_cust_list.push(data2[i][1]);
                         expSpeed_cust_list[data2[i][1]] = data2[i][3];
-                        // sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][4]
+                        prmSpeed_cust_list[data2[i][1]] = data2[i][5]
                         stdSpeed_cust_list[data2[i][1]] = data2[i][4]; // creating
-                        totalUsage_cust_list[data2[i][1]] = data2[i][5]; //
+                        totalUsage_cust_list[data2[i][1]] = data2[i][6]; //
 
                     }
                 }
@@ -2018,9 +2200,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 for (var i = 0; i < data2.length; i++) {
                     month_year_cust_list.push(data2[i][1]);
                     expSpeed_cust_list[data2[i][1]] = data2[i][3];
-                    // sendleAUExpressSpeed_cust_list[data2[i][1]] = data2[i][4]
+                    prmSpeed_cust_list[data2[i][1]] = data2[i][5]
                     stdSpeed_cust_list[data2[i][1]] = data2[i][4]; // creating
-                    totalUsage_cust_list[data2[i][1]] = data2[i][5]; //
+                    totalUsage_cust_list[data2[i][1]] = data2[i][6]; //
 
                 }
             }
@@ -2042,7 +2224,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             // categories
             Object.keys(expSpeed_cust_list).map(function (item, key) {
                 series_data20.push(parseInt(expSpeed_cust_list[item]));
-                series_data23.push(parseInt(sendleAUExpressSpeed_cust_list[item]));
+                series_data23.push(parseInt(prmSpeed_cust_list[item]));
                 series_data21.push(parseInt(stdSpeed_cust_list[item]));
                 series_data22.push(parseInt(totalUsage_cust_list[item]));
                 categores25.push(item)
@@ -2104,15 +2286,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                         debtDataSet3.push([debt_row.franchiseeName,
                         debt_row.express_speed,
-                        debt_row.standard_speed, debt_row.total_usage
+                        debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
                         ]);
                         // debtDataSet3.push([debt_row.franchiseeName,
-                        // debt_row.express_speed, debt_row.sendle_au_express,
-                        // debt_row.standard_speed, debt_row.total_usage
+                        // debt_row.express_speed,
+                        // debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
                         // ]);
 
-                        csvSet3.push([debt_row.franchiseeName, debt_row.express_speed, debt_row.sendle_au_express,
-                        debt_row.standard_speed, debt_row.total_usage
+                        csvSet3.push([debt_row.franchiseeName, debt_row.express_speed,
+                        debt_row.standard_speed, debt_row.sendle_au_express, debt_row.total_usage
                         ]);
 
                     });
@@ -2123,7 +2305,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 datatable3.rows.add(debtDataSet3);
                 datatable3.draw();
 
-                saveCsvDaily(csvSet3);
+                // saveCsvDaily(csvSet3);
+                if (role != 1000) {
+                    saveCSVZeeList(csvSet3);
+                }
+
 
                 var data3 = datatable3.rows().data();
 
@@ -2132,7 +2318,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 // type in array.
                 var expSpeed_zee_list = []; // creating array for storing browser
                 // type in array.
-                var sendleAUExpressSpeed_zee_list = [];
+                var prmSpeed_zee_list = [];
                 var stdSpeed_zee_list = []; // creating array for storing browser
                 // type in array
                 var totalUsage_zee_list = []; // creating array for storing browser
@@ -2141,9 +2327,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 for (var i = 0; i < data3.length; i++) {
                     month_year_zee_list.push(data3[i][0]);
                     expSpeed_zee_list[data3[i][0]] = data3[i][1];
-                    // sendleAUExpressSpeed_zee_list[data3[i][0]] = data3[i][2]
+                    prmSpeed_zee_list[data3[i][0]] = data3[i][3]
                     stdSpeed_zee_list[data3[i][0]] = data3[i][2]; // creating
-                    totalUsage_zee_list[data3[i][0]] = data3[i][3]; //
+                    totalUsage_zee_list[data3[i][0]] = data3[i][4]; //
 
                 }
                 var count3 = {}; // creating object for getting categories with
@@ -2163,7 +2349,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 // categories
                 Object.keys(expSpeed_zee_list).map(function (item, key) {
                     series_data30.push(parseInt(expSpeed_zee_list[item]));
-                    series_data33.push(parseInt(sendleAUExpressSpeed_zee_list[item]));
+                    series_data33.push(parseInt(prmSpeed_zee_list[item]));
                     series_data31.push(parseInt(stdSpeed_zee_list[item]));
                     series_data32.push(parseInt(totalUsage_zee_list[item]));
                     categores35.push(item)
@@ -2293,7 +2479,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable4.rows.add(debtDataSet4);
             datatable4.draw();
 
-            saveCsvDaily(csvSet4, 'source');
+            // saveCsvDaily(csvSet4, 'source');
+            saveCSVSource(csvSet4, 'source');
 
             var data4 = dataTable4.rows().data();
 
@@ -2392,7 +2579,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 source_row.std_5kg,
                                 source_row.std_10kg,
                                 source_row.std_20kg,
-                                source_row.std_25kg,
+                                source_row.std_25kg, source_row.prm_1kg,
+                                source_row.prm_3kg,
+                                source_row.prm_5kg,
+                                source_row.prm_10kg,
+                                source_row.prm_20kg,
                                 source_row.total_weight_usage
                             ]);
 
@@ -2411,6 +2602,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 source_row.std_10kg,
                                 source_row.std_20kg,
                                 source_row.std_25kg,
+                                source_row.prm_1kg,
+                                source_row.prm_3kg,
+                                source_row.prm_5kg,
+                                source_row.prm_10kg,
+                                source_row.prm_20kg,
                                 source_row.total_weight_usage
                             ]);
                         } else if (freq == 'daily') {
@@ -2449,6 +2645,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 source_row.std_10kg,
                                 source_row.std_20kg,
                                 source_row.std_25kg,
+                                source_row.prm_1kg,
+                                source_row.prm_3kg,
+                                source_row.prm_5kg,
+                                source_row.prm_10kg,
+                                source_row.prm_20kg,
                                 source_row.total_weight_usage
                             ]);
 
@@ -2488,6 +2689,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 source_row.std_10kg,
                                 source_row.std_20kg,
                                 source_row.std_25kg,
+                                source_row.prm_1kg,
+                                source_row.prm_3kg,
+                                source_row.prm_5kg,
+                                source_row.prm_10kg,
+                                source_row.prm_20kg,
                                 source_row.total_weight_usage
                             ]);
 
@@ -2506,6 +2712,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 source_row.std_10kg,
                                 source_row.std_20kg,
                                 source_row.std_25kg,
+                                source_row.prm_1kg,
+                                source_row.prm_3kg,
+                                source_row.prm_5kg,
+                                source_row.prm_10kg,
+                                source_row.prm_20kg,
                                 source_row.total_weight_usage
                             ]);
                         }
@@ -2524,7 +2735,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable5.rows.add(debtDataSet5);
             datatable5.draw();
 
-            saveCsvDaily(csvSet5, 'source');
+            // saveCsvDaily(csvSet5, 'source');
+            saveCSVProdWeights(csvSet5);
 
             var data5 = dataTable5.rows().data();
 
@@ -2544,6 +2756,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             var std_10kg = [];
             var std_20kg = [];
             var std_25kg = [];
+            var prm_1kg = [];
+            var prm_3kg = [];
+            var prm_5kg = [];
+            var prm_10kg = [];
+            var prm_20kg = [];
             var total_weight_usage = [];
 
             for (var i = 0; i < data5.length; i++) {
@@ -2563,7 +2780,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 std_10kg[data5[i][0]] = data5[i][13];
                 std_20kg[data5[i][0]] = data5[i][14];
                 std_25kg[data5[i][0]] = data5[i][15];
-                total_weight_usage[data5[i][0]] = data5[i][16];
+                prm_1kg[data5[i][0]] = data5[i][16];
+                prm_3kg[data5[i][0]] = data5[i][17];
+                prm_5kg[data5[i][0]] = data5[i][18];
+                prm_10kg[data5[i][0]] = data5[i][19];
+                prm_20kg[data5[i][0]] = data5[i][20];
+                total_weight_usage[data5[i][0]] = data5[i][21];
 
             }
             var count = {};
@@ -2588,6 +2810,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             var series_data190 = [];
             var series_data200 = [];
             var series_data210 = [];
+            var series_data220 = [];
+            var series_data230 = [];
+            var series_data240 = [];
+            var series_data250 = [];
+            var series_data260 = [];
 
             var categores5 = [];
             Object.keys(exp_dl).map(function (item, key) {
@@ -2606,6 +2833,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 series_data180.push(parseInt(std_10kg[item]));
                 series_data190.push(parseInt(std_20kg[item]));
                 series_data200.push(parseInt(std_25kg[item]));
+                series_data220.push(parseInt(prm_1kg[item]));
+                series_data230.push(parseInt(prm_3kg[item]));
+                series_data240.push(parseInt(prm_5kg[item]));
+                series_data250.push(parseInt(prm_10kg[item]));
+                series_data260.push(parseInt(prm_20kg[item]));
                 series_data210.push(parseInt(total_weight_usage[item]));
                 categores5.push(item)
             });
@@ -2625,7 +2857,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 series_data180,
                 series_data190,
                 series_data200,
-                series_data210, categores5);
+                series_data210, categores5, series_data220,
+                series_data230,
+                series_data240,
+                series_data250,
+                series_data260);
 
 
             return true;
@@ -2646,7 +2882,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             series_data180,
             series_data190,
             series_data200,
-            series_data210, categores5) {
+            series_data210, categores5, series_data220,
+            series_data230,
+            series_data240,
+            series_data250,
+            series_data260) {
             // console.log(series_data)
             Highcharts
                 .chart(
@@ -2819,6 +3059,41 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     }, {
                         name: 'Standard - 25kg',
                         data: series_data200,
+
+                        style: {
+                            fontWeight: 'bold',
+                        }
+                    }, {
+                        name: 'Premium - 1kg',
+                        data: series_data220,
+
+                        style: {
+                            fontWeight: 'bold',
+                        }
+                    }, {
+                        name: 'Premium - 3kg',
+                        data: series_data230,
+
+                        style: {
+                            fontWeight: 'bold',
+                        }
+                    }, {
+                        name: 'Premium - 5kg',
+                        data: series_data240,
+
+                        style: {
+                            fontWeight: 'bold',
+                        }
+                    }, {
+                        name: 'Premium - 10kg',
+                        data: series_data250,
+
+                        style: {
+                            fontWeight: 'bold',
+                        }
+                    }, {
+                        name: 'Premium - 20kg',
+                        data: series_data260,
 
                         style: {
                             fontWeight: 'bold',
@@ -3011,13 +3286,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         style: {
                             fontWeight: 'bold',
                         }
-                        // }, {
-                        //     name: 'Sendle AU Express',
-                        //     data: series_data8,
-                        //     color: '#108372',
-                        //     style: {
-                        //         fontWeight: 'bold',
-                        //     }
+                    }, {
+                        name: 'Premium',
+                        data: series_data8,
+                        color: '#009fda',
+                        style: {
+                            fontWeight: 'bold',
+                        }
                     }, {
                         name: 'Standard',
                         data: series_data2,

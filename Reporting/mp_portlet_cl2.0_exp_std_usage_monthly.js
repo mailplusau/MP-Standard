@@ -2041,7 +2041,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable.draw();
 
             // saveCsvWeekly(csvSet);
-            saveCSVOverview(csvSet);
+            // saveCSVOverview(csvSet);
 
             var data = datatable.rows().data();
 
@@ -2160,7 +2160,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable2.draw();
 
             // saveCsvMonthly(csvSet2);
-            saveCSVCustomerList(csvSet2);
+            // saveCSVCustomerList(csvSet2);
 
             var data2 = datatable2.rows().data();
 
@@ -2307,7 +2307,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                 // saveCsvDaily(csvSet3);
                 if (role != 1000) {
-                    saveCSVZeeList(csvSet3);
+                    // saveCSVZeeList(csvSet3);
                 }
 
 
@@ -2480,7 +2480,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable4.draw();
 
             // saveCsvDaily(csvSet4, 'source');
-            saveCSVSource(csvSet4, 'source');
+            // saveCSVSource(csvSet4, 'source');
 
             var data4 = dataTable4.rows().data();
 
@@ -2736,7 +2736,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             datatable5.draw();
 
             // saveCsvDaily(csvSet5, 'source');
-            saveCSVProdWeights(csvSet5);
+            // saveCSVProdWeights(csvSet5);
 
             var data5 = dataTable5.rows().data();
 

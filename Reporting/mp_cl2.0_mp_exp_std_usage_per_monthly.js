@@ -287,6 +287,97 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
             });
 
+            //On click of create user note button
+		$(".createUserNote").click(function () {
+			var customerInternalID = $(this).attr("data-id");
+			console.log("inside modal");
+			console.log("customerInternalID " + customerInternalID);
+			$("#customer_id").val(customerInternalID);
+			console.log("customerInternalID " + $("#customer_id").val());
+			$("#myModalUserNote").show();
+		});
+
+		$("#createNote").click(function () {
+			console.log("inside create note modal");
+			var customerInternalID = $("#customer_id").val();
+
+			if (isNullorEmpty($(".userNote").val())) {
+				alert("Please enter a note");
+				return false;
+			}
+
+			console.log(customerInternalID);
+
+			var userNoteRecord = record.create({
+				type: record.Type.NOTE,
+				isDynamic: true,
+			});
+
+			userNoteRecord.setValue({
+				fieldId: "entity",
+				value: parseInt(customerInternalID),
+			});
+
+			userNoteRecord.setValue({
+				fieldId: "title",
+				value: "New Leads Invoicing Reconciliation - Notes",
+			});
+
+			userNoteRecord.setValue({
+				fieldId: "direction",
+				value: 1,
+			});
+
+			userNoteRecord.setValue({
+				fieldId: "notetype",
+				value: 7,
+			});
+
+			userNoteRecord.setValue({
+				fieldId: "author",
+				value: runtime.getCurrentUser().id,
+			});
+
+			userNoteRecord.setValue({
+				fieldId: "notedate",
+				value: getDateStoreNS(),
+			});
+
+			userNoteRecord.setValue({
+				fieldId: "note",
+				value: getCurrentDateTime() + " - " + $(".userNote").val() + "\n",
+			});
+
+			var userNoteRecordId = userNoteRecord.save();
+
+			var url = baseURL + "/app/site/hosting/scriptlet.nl?script=1948&deploy=1";
+			window.location.href = url;
+		});
+//On click of cancel button
+		$(".cancelCustomer").click(function () {
+			var customerInternalId = $(this).attr("data-id");
+			var cancelURL =
+				"https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1722&deploy=1&compid=1048144&custid=" +
+				parseInt(customerInternalId);
+			window.location.href = cancelURL;
+		});
+
+		//On click of change service button
+		$(".serviceChange").click(function () {
+			var customerInternalId = $(this).attr("data-id");
+
+			var cancelURL =
+				"https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1717&deploy=1&compid=1048144&custid=" +
+				parseInt(customerInternalId);
+			window.location.href = cancelURL;
+		});
+
+		//On click of close icon in the modal
+		$(".close").click(function () {
+			$("#myModal").hide();
+			$("#myModalUserNote").hide();
+		});
+
             /**
              *  Submit Button Function
              */
@@ -486,6 +577,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     title: 'Premium Usage'
                 }, {
                     title: 'Total Usage'
+                }, {
+                    title: 'Action Buttons'
                 }],
                 columnDefs: [{
                     targets: [1, 2, 6],
@@ -2324,7 +2417,20 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             plotChartSpeedUsage(series_data6, series_data7, series_data10, categores4, series_data8, 'container_monthly');
 
 
-
+            var scheduleTaskIcon =
+			"<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='vertical-align: middle;'><title>Schedule Onboarding Task</title><g id='calendar_add_fill' fill='none'><path d='M24 0v24H0V0zM12.594 23.258l-.012.002-.071.035-.02.004-.014-.004-.071-.036c-.01-.003-.019 0-.024.006l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.016-.018m.264-.113-.014.002-.184.093-.01.01-.003.011.018.43.005.012.008.008.201.092c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.003-.011.018-.43-.003-.012-.01-.01z'/><path fill='#F6F8F9FF' d='M7 4a1 1 0 0 1 2 0v1h6V4a1 1 0 1 1 2 0v1h2a2 2 0 0 1 2 2v3H3V7a2 2 0 0 1 2-2h2zm11 10a1 1 0 0 1 1 1v2h2a1 1 0 1 1 0 2h-2v2a1 1 0 1 1-2 0v-2h-2a1 1 0 1 1 0-2h2v-2a1 1 0 0 1 1-1m0-2a3.001 3.001 0 0 0-2.836 2.018 1.9 1.9 0 0 1-1.146 1.146 3.001 3.001 0 0 0-.174 5.605l.174.067c.12.041.236.097.346.164H5a2 2 0 0 1-2-2v-7z'/></g></svg>";
+		var editTaskIcon =
+			"<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='vertical-align: middle;'><title>Edit Task</title><g id='schedule_fill' fill='none'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F6F8F9FF' d='M16 3a1 1 0 0 1 1 1v1h2a2 2 0 0 1 1.995 1.85L21 7v12a2 2 0 0 1-1.85 1.995L19 21H5a2 2 0 0 1-1.995-1.85L3 19V7a2 2 0 0 1 1.85-1.995L5 5h2V4a1 1 0 0 1 2 0v1h6V4a1 1 0 0 1 1-1m-1.176 6.379-4.242 4.242-1.415-1.414a1 1 0 0 0-1.414 1.414l2.114 2.115a1.01 1.01 0 0 0 1.429 0l4.942-4.943a1 1 0 1 0-1.414-1.414'/></g></svg>";
+		var completeTaskIcon =
+			"<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='vertical-align: middle;'><title>Complete Task</title><g id='check_fill' fill='none' fill-rule='evenodd'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F6F8F9FF' d='M21.546 5.111a1.5 1.5 0 0 1 0 2.121L10.303 18.475a1.6 1.6 0 0 1-2.263 0L2.454 12.89a1.5 1.5 0 1 1 2.121-2.121l4.596 4.596L19.424 5.111a1.5 1.5 0 0 1 2.122 0'/></g></svg>";
+		var notesTask =
+			"<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='vertical-align: middle;'><title>Create User Note</title><g id='notebook_fill' fill='none'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F6F8F9FF' d='M8 2v19H6c-1.054 0-2-.95-2-2V4c0-1.054.95-2 2-2zm9 0c1.598 0 3 1.3 3 3v13c0 1.7-1.4 3-3 3h-7V2z'/></g></svg>";
+		var cancelTask =
+			"<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='vertical-align: middle;'><title>Cancel Customer</title><g id='close_circle_fill' fill='none'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F6F8F9FF' d='M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2M9.879 8.464a1 1 0 0 0-1.498 1.32l.084.095 2.12 2.12-2.12 2.122a1 1 0 0 0 1.32 1.498l.094-.083L12 13.414l2.121 2.122a1 1 0 0 0 1.498-1.32l-.083-.095L13.414 12l2.122-2.121a1 1 0 0 0-1.32-1.498l-.095.083L12 10.586z'/></g></svg>";
+		var serviceChangeTask =
+			"<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='vertical-align: middle;'><title>Process Service Change</title><g id='refresh_2_fill' fill='none'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F6F8F9FF' d='M1.498 12.082c-.01-1.267 1.347-1.987 2.379-1.406l.113.07 2.678 1.804c1.424.96.538 3.146-1.1 2.915l-.137-.025-.109-.024a7.504 7.504 0 0 0 13.175.335 1.5 1.5 0 1 1 2.6 1.498c-2.317 4.02-7.119 6.152-11.815 4.893a10.503 10.503 0 0 1-7.784-10.06m1.406-5.33C5.22 2.731 10.022.6 14.718 1.857a10.503 10.503 0 0 1 7.784 10.06c.01 1.267-1.347 1.987-2.379 1.407l-.113-.07-2.678-1.805c-1.424-.959-.538-3.145 1.099-2.914l.138.025.108.023A7.504 7.504 0 0 0 5.502 8.25a1.5 1.5 0 1 1-2.598-1.498'/></g></svg>";
+		var updateExpectedUsage =
+			"<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='vertical-align: middle;'><title>Update Expected Usage</title><g id='counter_2_fill' fill='none'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F6F8F9FF' d='M18 3a2 2 0 0 1 1.995 1.85L20 5v15a2 2 0 0 1-1.85 1.995L18 22H6a2 2 0 0 1-1.995-1.85L4 20V5a2 2 0 0 1 1.85-1.995L6 3zM9.5 17a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m5 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-5-4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m5 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m1-7h-7A1.5 1.5 0 0 0 7 7.5v2A1.5 1.5 0 0 0 8.5 11h7A1.5 1.5 0 0 0 17 9.5v-2A1.5 1.5 0 0 0 15.5 6M15 8v1H9V8z'/></g></svg>";
 
             if (!isNullorEmpty(debt_rows2)) {
                 debt_rows2.forEach(function (debt_row, index) {
@@ -2371,11 +2477,27 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         debt_row.customerId +
                         '" target=_blank>USAGE</a>';
 
+                        var actionButtons =
+						'<td class="tableVerticalAlign"><button class="form-control btn btn-xs btn-info" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						debt_row.customerId +
+						'" data-type="completed" class="createUserNote" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						notesTask +
+						'</a></button> <button class="form-control btn btn-xs btn-warning" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						debt_row.customerId +
+						'" data-type="completed" class="serviceChange" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						serviceChangeTask +
+						'</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						debt_row.customerId +
+						'" data-type="completed" class="cancelCustomer" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						cancelTask +
+						"</a></button></td>";
+
+
 
 
                     debtDataSet2.push([viewLinks, debt_row.customerName, debt_row.franchiseeName,
                         debt_row.express_speed,
-                        debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
+                        debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage, actionButtons
                     ]);
                     // debtDataSet2.push([viewLinks, debt_row.customerName, debt_row.franchiseeName,
                     //     debt_row.express_speed, debt_row.sendle_au_express,
@@ -2383,7 +2505,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     // ]);
 
                     csvSet2.push([debt_row.customerName, debt_row.franchiseeName, debt_row.express_speed,
-                    debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage
+                    debt_row.standard_speed, debt_row.premium_speed, debt_row.total_usage, actionButtons
                     ]);
 
                 });

@@ -20,9 +20,11 @@ define([
 	"N/http",
 	"N/log",
 	"N/redirect",
-], function (ui, email, runtime, search, record, http, log, redirect) {
+	"N/format",
+], function (ui, email, runtime, search, record, http, log, redirect, format) {
 	var role = 0;
 	var zee = 0;
+	var customerListTableHTML = "";
 
 	function onRequest(context) {
 		var baseURL = "https://system.na2.netsuite.com";
@@ -62,34 +64,34 @@ define([
 
 				lastDay.setHours(0, 0, 0, 0);
 				//If begining of the year, show the current financial year, else show the current
-				if (m < 5) {
-					//Calculate the Current inancial Year
+				// if (m < 5) {
+				//Calculate the Current inancial Year
 
-					var firstDay = new Date(y, m, 1);
+				var firstDay = new Date(y, m, 1);
 
-					firstDay.setHours(0, 0, 0, 0);
+				firstDay.setHours(0, 0, 0, 0);
 
-					if (m >= 6) {
-						var first_july = new Date(y, 6, 1);
-					} else {
-						var first_july = new Date(y - 1, 6, 1);
-					}
-					date_from = first_july;
-					date_to = lastDay;
-
-					start_date = GetFormattedDate(date_from);
-					last_date = GetFormattedDate(date_to);
+				if (m >= 6) {
+					var first_july = new Date(y, 6, 1);
 				} else {
-					//Calculate the Current Calendar Year
-					var today_day_in_month = date.getDate();
-					var today_date = new Date(Date.UTC(y, m, today_day_in_month));
-					var first_day_in_year = new Date(Date.UTC(y, 0));
-					var date_from = first_day_in_year.toISOString().split("T")[0];
-					var date_to = today_date.toISOString().split("T")[0];
-
-					start_date = date_from;
-					last_date = GetFormattedDate(lastDay);
+					var first_july = new Date(y - 1, 6, 1);
 				}
+				date_from = first_july;
+				date_to = lastDay;
+
+				start_date = GetFormattedDate(date_from);
+				last_date = GetFormattedDate(date_to);
+				// } else {
+				// 	//Calculate the Current Calendar Year
+				// 	var today_day_in_month = date.getDate();
+				// 	var today_date = new Date(Date.UTC(y, m, today_day_in_month));
+				// 	var first_day_in_year = new Date(Date.UTC(y, 0));
+				// 	var date_from = first_day_in_year.toISOString().split("T")[0];
+				// 	var date_to = today_date.toISOString().split("T")[0];
+
+				// 	start_date = date_from;
+				// 	last_date = GetFormattedDate(lastDay);
+				// }
 			}
 
 			var stateID = context.request.parameters.state;
@@ -143,6 +145,539 @@ define([
 						title: "MP Product Scans - Monthly - " + company_name,
 					});
 				}
+			}
+
+			// All MP Products - Total Customer Usage
+			var mpProdsScansPerCustomerSearch = search.load({
+				type: "customrecord_customer_product_stock",
+				id: "customsearch_prod_stock_usage_report___4",
+			});
+
+			var date_from_v2 = dateISOToNetsuite(date_from);
+			var date_to_v2 = dateISOToNetsuite(date_to);
+
+			if (!isNullorEmpty(date_from_v2) && !isNullorEmpty(date_to_v2)) {
+				mpProdsScansPerCustomerSearch.filters.push(
+					search.createFilter({
+						name: "custrecord_cust_date_stock_used",
+						join: null,
+						operator: search.Operator.ONORAFTER,
+						values: date_from_v2,
+					})
+				);
+				mpProdsScansPerCustomerSearch.filters.push(
+					search.createFilter({
+						name: "custrecord_cust_date_stock_used",
+						join: null,
+						operator: search.Operator.ONORBEFORE,
+						values: date_to_v2,
+					})
+				);
+			}
+
+			if (!isNullorEmpty(zee)) {
+				mpProdsScansPerCustomerSearch.filters.push(
+					search.createFilter({
+						name: "custrecord_cust_prod_stock_zee",
+						join: null,
+						operator: search.Operator.IS,
+						values: zee,
+					})
+				);
+			}
+
+			if (!isNullorEmpty(customerID)) {
+				mpProdsScansPerCustomerSearch.filters.push(
+					search.createFilter({
+						name: "internalid",
+						join: "custrecord_cust_prod_stock_customer",
+						operator: search.Operator.ANYOF,
+						values: parseInt(customerID),
+					})
+				);
+			}
+
+			if (!isNullorEmpty(barcodeSource)) {
+				mpProdsScansPerCustomerSearch.filters.push(
+					search.createFilter({
+						name: "custrecord_barcode_source",
+						join: null,
+						operator: search.Operator.IS,
+						values: barcodeSource,
+					})
+				);
+			}
+
+			var count3 = 0;
+			var oldCustomerId = null;
+			var oldCustomerName = null;
+			var oldFranchiseeName = null;
+			var oldIntegrationText = null;
+
+			var express_speed_cust_usage = 0;
+			var premium_speed_cust_usage = 0;
+			var standard_speed_cust_usage = 0;
+			var sendle_au_express_cust_usage = 0;
+			var total_usage_cust_usage = 0;
+
+			var debt_set2 = [];
+
+			var notesTask =
+				"<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='vertical-align: middle;'><title>Create User Note</title><g id='notebook_fill' fill='none'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F6F8F9FF' d='M8 2v19H6c-1.054 0-2-.95-2-2V4c0-1.054.95-2 2-2zm9 0c1.598 0 3 1.3 3 3v13c0 1.7-1.4 3-3 3h-7V2z'/></g></svg>";
+			var cancelTask =
+				"<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='vertical-align: middle;'><title>Cancel Customer</title><g id='close_circle_fill' fill='none'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F6F8F9FF' d='M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2M9.879 8.464a1 1 0 0 0-1.498 1.32l.084.095 2.12 2.12-2.12 2.122a1 1 0 0 0 1.32 1.498l.094-.083L12 13.414l2.121 2.122a1 1 0 0 0 1.498-1.32l-.083-.095L13.414 12l2.122-2.121a1 1 0 0 0-1.32-1.498l-.095.083L12 10.586z'/></g></svg>";
+			var serviceChangeTask =
+				"<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='vertical-align: middle;'><title>Process Service Change</title><g id='refresh_2_fill' fill='none'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F6F8F9FF' d='M1.498 12.082c-.01-1.267 1.347-1.987 2.379-1.406l.113.07 2.678 1.804c1.424.96.538 3.146-1.1 2.915l-.137-.025-.109-.024a7.504 7.504 0 0 0 13.175.335 1.5 1.5 0 1 1 2.6 1.498c-2.317 4.02-7.119 6.152-11.815 4.893a10.503 10.503 0 0 1-7.784-10.06m1.406-5.33C5.22 2.731 10.022.6 14.718 1.857a10.503 10.503 0 0 1 7.784 10.06c.01 1.267-1.347 1.987-2.379 1.407l-.113-.07-2.678-1.805c-1.424-.959-.538-3.145 1.099-2.914l.138.025.108.023A7.504 7.504 0 0 0 5.502 8.25a1.5 1.5 0 1 1-2.598-1.498'/></g></svg>";
+
+			var mpProdsScansPerCustomerSearchResult =
+				mpProdsScansPerCustomerSearch.run();
+
+			var resultSet = mpProdsScansPerCustomerSearchResult.getRange({
+				start: 0,
+				end: 100,
+			});
+
+			mpProdsScansPerCustomerSearch
+				.run()
+				.each(function (mpProdsScansPerCustomerSearchSet) {
+					var customerId = mpProdsScansPerCustomerSearchSet.getValue({
+						name: "custrecord_cust_prod_stock_customer",
+						summary: "GROUP",
+					});
+
+					var customerName = mpProdsScansPerCustomerSearchSet.getText({
+						name: "custrecord_cust_prod_stock_customer",
+						summary: "GROUP",
+					});
+
+					var franchiseeName = mpProdsScansPerCustomerSearchSet.getText({
+						name: "partner",
+						join: "CUSTRECORD_CUST_PROD_STOCK_CUSTOMER",
+						summary: "GROUP",
+					});
+
+					var deliverySpeed = mpProdsScansPerCustomerSearchSet.getValue({
+						name: "custrecord_delivery_speed",
+						summary: "GROUP",
+					});
+					var deliverySpeedText = mpProdsScansPerCustomerSearchSet.getText({
+						name: "custrecord_delivery_speed",
+						summary: "GROUP",
+					});
+
+					var integration = mpProdsScansPerCustomerSearchSet.getValue({
+						name: "custrecord_integration",
+						summary: "GROUP",
+					});
+					var integrationText = mpProdsScansPerCustomerSearchSet.getText({
+						name: "custrecord_integration",
+						summary: "GROUP",
+					});
+
+					var mpexUsage = parseInt(
+						mpProdsScansPerCustomerSearchSet.getValue({
+							name: "name",
+							summary: "COUNT",
+						})
+					);
+
+					if (count3 == 0) {
+						if (integrationText == "- None -") {
+							if (deliverySpeed == 2 || deliverySpeedText == "- None -") {
+								express_speed_cust_usage = mpexUsage;
+							} else if (deliverySpeed == 4) {
+								premium_speed_cust_usage = mpexUsage;
+							}
+						} else if (integrationText == "Sendle") {
+							if (deliverySpeed == 2 || deliverySpeedText == "- None -") {
+								// sendle_au_express_cust_usage = mpexUsage;
+							} else if (deliverySpeed == 1) {
+								standard_speed_cust_usage = mpexUsage;
+							}
+						} else if (integrationText == "API Integration") {
+							if (deliverySpeed == 2 || deliverySpeedText == "- None -") {
+								sendle_au_express_cust_usage = mpexUsage;
+							} else if (deliverySpeed == 1) {
+								standard_speed_cust_usage = mpexUsage;
+							}
+						}
+
+						total_usage_cust_usage =
+							express_speed_cust_usage +
+							standard_speed_cust_usage +
+							sendle_au_express_cust_usage +
+							premium_speed_cust_usage;
+					} else if (
+						oldCustomerName != null &&
+						oldCustomerName == customerName
+					) {
+						if (integrationText == "- None -") {
+							if (deliverySpeed == 2 || deliverySpeedText == "- None -") {
+								express_speed_cust_usage += mpexUsage;
+							} else if (deliverySpeed == 4) {
+								premium_speed_cust_usage += mpexUsage;
+							}
+						} else if (integrationText == "Sendle") {
+							if (deliverySpeed == 2 || deliverySpeedText == "- None -") {
+								// sendle_au_express_cust_usage += mpexUsage;
+							} else if (deliverySpeed == 1) {
+								standard_speed_cust_usage += mpexUsage;
+							}
+						} else if (integrationText == "API Integration") {
+							if (deliverySpeed == 2 || deliverySpeedText == "- None -") {
+								sendle_au_express_cust_usage += mpexUsage;
+							} else if (deliverySpeed == 1) {
+								standard_speed_cust_usage += mpexUsage;
+							}
+						}
+
+						total_usage_cust_usage =
+							express_speed_cust_usage +
+							standard_speed_cust_usage +
+							sendle_au_express_cust_usage +
+							premium_speed_cust_usage;
+					} else if (
+						oldCustomerName != null &&
+						oldCustomerName != customerName
+					) {
+						// var customer_record = record.load({
+						// 	type: "customer",
+						// 	id: parseInt(oldCustomerId),
+						// });
+
+						// var mpProdWeeklyUsage = customer_record.getValue({
+						// 	fieldId: "custentity_actual_mpex_weekly_usage",
+						// });
+
+						var firstWeekofUsage = "";
+						var lastWeekofUsage = "";
+						var lastWeekUsageCount = 0;
+						var avgWeeklyUsageCount = 0;
+						var noOfWeeks = 0;
+						var tempTotal = 0;
+
+						// if (!isNullorEmpty(mpProdWeeklyUsage)) {
+						// 	var parsedUsage = JSON.parse(mpProdWeeklyUsage);
+						// 	noOfWeeks = parsedUsage["Usage"].length;
+						// 	for (var x = 0; x < parsedUsage["Usage"].length; x++) {
+						// 		var parts = parsedUsage["Usage"][x]["Week Used"].split("/");
+
+						// 		if (x == 0) {
+						// 			firstWeekofUsage =
+						// 				parts[2] +
+						// 				"-" +
+						// 				("0" + parts[1]).slice(-2) +
+						// 				"-" +
+						// 				("0" + parts[0]).slice(-2) +
+						// 				" - Usage: " +
+						// 				parsedUsage["Usage"][x]["Count"];
+						// 		}
+
+						// 		if (x == parsedUsage["Usage"].length - 1) {
+						// 			lastWeekofUsage =
+						// 				parts[2] +
+						// 				"-" +
+						// 				("0" + parts[1]).slice(-2) +
+						// 				"-" +
+						// 				("0" + parts[0]).slice(-2) +
+						// 				" - Usage: " +
+						// 				parsedUsage["Usage"][x]["Count"];
+						// 			lastWeekUsageCount = parseInt(
+						// 				parsedUsage["Usage"][x]["Count"]
+						// 			);
+						// 		}
+
+						// 		tempTotal += parseInt(parsedUsage["Usage"][x]["Count"]);
+						// 	}
+						// 	avgWeeklyUsageCount = parseFloat(tempTotal / noOfWeeks).toFixed(
+						// 		2
+						// 	);
+						// }
+
+						// var viewLinks =
+						// 	'<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&custid=' +
+						// 	oldCustomerId +
+						// 	'" target=_blank>USAGE</a>';
+
+						// customerListTableHTML += "<tr>";
+						// customerListTableHTML += "<td>" + viewLinks + "</td>";
+						// customerListTableHTML += "<td>" + oldCustomerName + "</td>";
+						// customerListTableHTML += "<td>" + oldFranchiseeName + "</td>";
+						// customerListTableHTML += "<td>" + firstWeekofUsage + "</td>";
+						// customerListTableHTML += "<td>" + lastWeekofUsage + "</td>";
+						// customerListTableHTML += "<td>" + avgWeeklyUsageCount + "</td>";
+						// customerListTableHTML +=
+						// 	"<td>" + express_speed_cust_usage + "</td>";
+						// customerListTableHTML +=
+						// 	"<td>" + standard_speed_cust_usage + "</td>";
+						// customerListTableHTML +=
+						// 	"<td>" + premium_speed_cust_usage + "</td>";
+						// customerListTableHTML += "<td>" + total_usage_cust_usage + "</td>";
+						// customerListTableHTML +=
+						// 	'<td class="tableVerticalAlign"><button class="form-control btn btn-xs btn-info" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						// 	oldCustomerId +
+						// 	'" data-type="completed" class="createUserNote" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						// 	notesTask +
+						// 	'</a></button> <button class="form-control btn btn-xs btn-warning" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						// 	oldCustomerId +
+						// 	'" data-type="completed" class="serviceChange" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						// 	serviceChangeTask +
+						// 	'</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						// 	oldCustomerId +
+						// 	'" data-type="completed" class="cancelCustomer" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						// 	cancelTask +
+						// 	"</a></button></td>";
+						// customerListTableHTML += "</tr>";
+
+						debt_set2.push({
+							customerId: oldCustomerId,
+							customerName: oldCustomerName,
+							franchiseeName: oldFranchiseeName,
+							firstWeekofUsage: firstWeekofUsage,
+							lastWeekofUsage: lastWeekofUsage,
+							avgWeeklyUsageCount: avgWeeklyUsageCount,
+							express_speed: express_speed_cust_usage,
+							sendle_au_express: sendle_au_express_cust_usage,
+							standard_speed: standard_speed_cust_usage,
+							total_usage: total_usage_cust_usage,
+							premium_speed: premium_speed_cust_usage,
+						});
+
+						express_speed_cust_usage = 0;
+						standard_speed_cust_usage = 0;
+						sendle_au_express_cust_usage = 0;
+						premium_speed_cust_usage = 0;
+						total_usage_cust_usage = 0;
+
+						if (integrationText == "- None -") {
+							if (deliverySpeed == 2 || deliverySpeedText == "- None -") {
+								express_speed_cust_usage = mpexUsage;
+							} else if (deliverySpeed == 4) {
+								premium_speed_cust_usage = mpexUsage;
+							}
+						} else if (integrationText == "Sendle") {
+							if (deliverySpeed == 2 || deliverySpeedText == "- None -") {
+								// sendle_au_express_cust_usage = mpexUsage;
+							} else if (deliverySpeed == 1) {
+								standard_speed_cust_usage = mpexUsage;
+							}
+						} else if (integrationText == "API Integration") {
+							if (deliverySpeed == 2 || deliverySpeedText == "- None -") {
+								sendle_au_express_cust_usage = mpexUsage;
+							} else if (deliverySpeed == 1) {
+								standard_speed_cust_usage = mpexUsage;
+							}
+						}
+
+						total_usage_cust_usage =
+							express_speed_cust_usage +
+							standard_speed_cust_usage +
+							sendle_au_express_cust_usage +
+							premium_speed_cust_usage;
+					}
+
+					count3++;
+					oldCustomerName = customerName;
+					oldCustomerId = customerId;
+					oldFranchiseeName = franchiseeName;
+					return true;
+				});
+
+			if (count3 > 0) {
+				// var customer_record = record.load({
+				// 	type: "customer",
+				// 	id: parseInt(oldCustomerId),
+				// });
+
+				// var mpProdWeeklyUsage = customer_record.getValue({
+				// 	fieldId: "custentity_actual_mpex_weekly_usage",
+				// });
+
+				var firstWeekofUsage = "";
+				var lastWeekofUsage = "";
+				var lastWeekUsageCount = 0;
+				var avgWeeklyUsageCount = 0;
+				var noOfWeeks = 0;
+				var tempTotal = 0;
+
+				// if (!isNullorEmpty(mpProdWeeklyUsage)) {
+				// 	var parsedUsage = JSON.parse(mpProdWeeklyUsage);
+				// 	noOfWeeks = parsedUsage["Usage"].length;
+				// 	for (var x = 0; x < parsedUsage["Usage"].length; x++) {
+				// 		var parts = parsedUsage["Usage"][x]["Week Used"].split("/");
+
+				// 		if (x == 0) {
+				// 			firstWeekofUsage =
+				// 				parts[2] +
+				// 				"-" +
+				// 				("0" + parts[1]).slice(-2) +
+				// 				"-" +
+				// 				("0" + parts[0]).slice(-2) +
+				// 				" - Usage: " +
+				// 				parsedUsage["Usage"][x]["Count"];
+				// 		}
+
+				// 		if (x == parsedUsage["Usage"].length - 1) {
+				// 			lastWeekofUsage =
+				// 				parts[2] +
+				// 				"-" +
+				// 				("0" + parts[1]).slice(-2) +
+				// 				"-" +
+				// 				("0" + parts[0]).slice(-2) +
+				// 				" - Usage: " +
+				// 				parsedUsage["Usage"][x]["Count"];
+				// 			lastWeekUsageCount = parseInt(parsedUsage["Usage"][x]["Count"]);
+				// 		}
+
+				// 		tempTotal += parseInt(parsedUsage["Usage"][x]["Count"]);
+				// 	}
+				// 	avgWeeklyUsageCount = parseFloat(tempTotal / noOfWeeks).toFixed(2);
+				// }
+
+				// var viewLinks =
+				// 	'<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&custid=' +
+				// 	oldCustomerId +
+				// 	'" target=_blank>USAGE</a>';
+
+				// customerListTableHTML += "<tr>";
+				// customerListTableHTML += "<td>" + viewLinks + "</td>";
+				// customerListTableHTML += "<td>" + oldCustomerName + "</td>";
+				// customerListTableHTML += "<td>" + oldFranchiseeName + "</td>";
+				// customerListTableHTML += "<td>" + firstWeekofUsage + "</td>";
+				// customerListTableHTML += "<td>" + lastWeekofUsage + "</td>";
+				// customerListTableHTML += "<td>" + avgWeeklyUsageCount + "</td>";
+				// customerListTableHTML += "<td>" + express_speed_cust_usage + "</td>";
+				// customerListTableHTML += "<td>" + standard_speed_cust_usage + "</td>";
+				// customerListTableHTML += "<td>" + premium_speed_cust_usage + "</td>";
+				// customerListTableHTML += "<td>" + total_usage_cust_usage + "</td>";
+				// customerListTableHTML +=
+				// 	'<td class="tableVerticalAlign"><button class="form-control btn btn-xs btn-info" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+				// 	oldCustomerId +
+				// 	'" data-type="completed" class="createUserNote" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+				// 	notesTask +
+				// 	'</a></button> <button class="form-control btn btn-xs btn-warning" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+				// 	oldCustomerId +
+				// 	'" data-type="completed" class="serviceChange" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+				// 	serviceChangeTask +
+				// 	'</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+				// 	oldCustomerId +
+				// 	'" data-type="completed" class="cancelCustomer" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+				// 	cancelTask +
+				// 	"</a></button></td>";
+				// customerListTableHTML += "</tr>";
+
+				debt_set2.push({
+					customerId: oldCustomerId,
+					customerName: oldCustomerName,
+					franchiseeName: oldFranchiseeName,
+					firstWeekofUsage: firstWeekofUsage,
+					lastWeekofUsage: lastWeekofUsage,
+					avgWeeklyUsageCount: avgWeeklyUsageCount,
+					express_speed: express_speed_cust_usage,
+					sendle_au_express: sendle_au_express_cust_usage,
+					standard_speed: standard_speed_cust_usage,
+					total_usage: total_usage_cust_usage,
+					premium_speed: premium_speed_cust_usage,
+				});
+			}
+
+			log.debug({
+				title: "debt_set2",
+				details: debt_set2,
+			});
+			debt_set2 = debt_set2.sort(function (a, b) {
+				return parseInt(b.total_usage) - parseInt(a.total_usage);
+			});
+			log.debug({
+				title: "After sorting",
+				details: "",
+			});
+			log.debug({
+				title: "debt_set2",
+				details: debt_set2,
+			});
+
+			for (var i = 0; i < 100; i++) {
+				var customer_record = record.load({
+					type: "customer",
+					id: parseInt(debt_set2[i].customerId),
+				});
+
+				var mpProdWeeklyUsage = customer_record.getValue({
+					fieldId: "custentity_actual_mpex_weekly_usage",
+				});
+
+				var firstWeekofUsage = "";
+				var lastWeekofUsage = "";
+				var lastWeekUsageCount = 0;
+				var avgWeeklyUsageCount = 0;
+				var noOfWeeks = 0;
+				var tempTotal = 0;
+
+				if (!isNullorEmpty(mpProdWeeklyUsage)) {
+					var parsedUsage = JSON.parse(mpProdWeeklyUsage);
+					noOfWeeks = parsedUsage["Usage"].length;
+					for (var x = 0; x < parsedUsage["Usage"].length; x++) {
+						var parts = parsedUsage["Usage"][x]["Week Used"].split("/");
+
+						if (x == 0) {
+							firstWeekofUsage =
+								parts[2] +
+								"-" +
+								("0" + parts[1]).slice(-2) +
+								"-" +
+								("0" + parts[0]).slice(-2) +
+								" - Usage: " +
+								parsedUsage["Usage"][x]["Count"];
+						}
+
+						if (x == parsedUsage["Usage"].length - 1) {
+							lastWeekofUsage =
+								parts[2] +
+								"-" +
+								("0" + parts[1]).slice(-2) +
+								"-" +
+								("0" + parts[0]).slice(-2) +
+								" - Usage: " +
+								parsedUsage["Usage"][x]["Count"];
+							lastWeekUsageCount = parseInt(parsedUsage["Usage"][x]["Count"]);
+						}
+
+						tempTotal += parseInt(parsedUsage["Usage"][x]["Count"]);
+					}
+					avgWeeklyUsageCount = parseFloat(tempTotal / noOfWeeks).toFixed(2);
+				}
+
+				var viewLinks =
+					'<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&custid=' +
+					debt_set2[i].customerId +
+					'" target=_blank>USAGE</a>';
+				customerListTableHTML += "<tr>";
+				customerListTableHTML += "<td>" + viewLinks + "</td>";
+				customerListTableHTML += "<td>" + debt_set2[i].customerName + "</td>";
+				customerListTableHTML += "<td>" + debt_set2[i].franchiseeName + "</td>";
+				customerListTableHTML += "<td>" + firstWeekofUsage + "</td>";
+				customerListTableHTML += "<td>" + lastWeekofUsage + "</td>";
+				customerListTableHTML += "<td>" + avgWeeklyUsageCount + "</td>";
+				customerListTableHTML += "<td>" + debt_set2[i].express_speed + "</td>";
+				customerListTableHTML += "<td>" + debt_set2[i].standard_speed + "</td>";
+				customerListTableHTML += "<td>" + debt_set2[i].premium_speed + "</td>";
+				customerListTableHTML += "<td>" + debt_set2[i].total_usage + "</td>";
+				customerListTableHTML +=
+					'<td class="tableVerticalAlign"><button class="form-control btn btn-xs btn-info" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+					debt_set2[i].customerId +
+					'" data-type="completed" class="createUserNote" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+					notesTask +
+					'</a></button> <button class="form-control btn btn-xs btn-warning" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+					debt_set2[i].customerId +
+					'" data-type="completed" class="serviceChange" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+					serviceChangeTask +
+					'</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+					debt_set2[i].customerId +
+					'" data-type="completed" class="cancelCustomer" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+					cancelTask +
+					"</a></button></td>";
+				customerListTableHTML += "</tr>";
 			}
 
 			var inlineHtml =
@@ -235,7 +770,7 @@ define([
 			inlineHtml += loadingSection();
 
 			inlineHtml +=
-				'<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>Instructions</u></b></br><ol><li>Select the desired customer from the "Customer" drop-down menu.</li><li>Choose the specific period or date range you wish to view.</li><li>Click the "Apply Filter" button.</li></ol><b>Monthly Overview:</b></br>The left button above the graph represents the filter for a monthly overview of scanned parcels. Below the graph, you can switch to weekly or daily views to see the total scans for that respective period.</br></br><b>Customer List:</b></br>The middle left button above the graph provides a list of all customers and their product usage based on the applied filters.</br></br><b>Source:</b></br>The middle right button above the graph offers data regarding the barcode source (MPEX or Standard).</br></br><b>Product Weight:</b></br>The right button above the graph gives you information about the products used based on their weight perspective.</p><div class="form-group container"><div class="row"><div class="col-xs-4"></div><div class="col-xs-4"><input type="button" value="CLICK FOR USER GUIDE" class="form-control btn btn-primary" id="showGuide" style="background-color: #095C7B; border-radius: 30px;" /></div><div class="col-xs-4"></div></div></div></div></br>';
+				'<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>Instructions</u></b></br><ol><li>Select the desired customer from the "Customer" drop-down menu.</li><li>Choose the specific period or date range you wish to view.</li><li>Click the "Apply Filter" button.</li></ol><b>Monthly Overview:</b></br>The left button above the graph represents the filter for a monthly overview of scanned parcels. Below the graph, you can switch to weekly or daily views to see the total scans for that respective period.</br></br><b>Customer List (Top 100):</b></br>The middle left button above the graph provides a list of all customers and their product usage based on the applied filters.</br></br><b>Source:</b></br>The middle right button above the graph offers data regarding the barcode source (MPEX or Standard).</br></br><b>Product Weight:</b></br>The right button above the graph gives you information about the products used based on their weight perspective.</p><div class="form-group container"><div class="row"><div class="col-xs-4"></div><div class="col-xs-4"><input type="button" value="CLICK FOR USER GUIDE" class="form-control btn btn-primary" id="showGuide" style="background-color: #095C7B; border-radius: 30px;" /></div><div class="col-xs-4"></div></div></div></div></br>';
 
 			inlineHtml += stepByStepGuideModal();
 			inlineHtml += addUserNotesModal();
@@ -311,12 +846,12 @@ define([
 			}
 
 			// if (isNullorEmpty(customerID)) {
+			inlineHtml +=
+				'<li role="presentation" class=""><a data-toggle="tab" href="#customer_list"><b>CUSTOMER LIST (TOP 100)</b></a></li>';
+			if (role != 1000 && isNullorEmpty(zee)) {
 				inlineHtml +=
-					'<li role="presentation" class=""><a data-toggle="tab" href="#customer_list"><b>CUSTOMER LIST</b></a></li>';
-				if (role != 1000 && isNullorEmpty(zee)) {
-					inlineHtml +=
-						'<li role="presentation" class=""><a data-toggle="tab" href="#zee_list"><b>FRANCHISEE LIST</b></a></li>';
-				}
+					'<li role="presentation" class=""><a data-toggle="tab" href="#zee_list"><b>FRANCHISEE LIST</b></a></li>';
+			}
 			// }
 
 			inlineHtml +=
@@ -764,39 +1299,6 @@ define([
 
 		return inlineHtml;
 	}
-	/**
-	 * The period dropdown field.
-	 * @param   {String}    date_from
-	 * @param   {String}    date_to
-	 * @return  {String}    `inlineHtml`
-	 */
-	function invoiceTypeSelection(invoiceType) {
-		var inlineHtml = '<div class="form-group container date_filter_section">';
-		inlineHtml += '<div class="row">';
-		inlineHtml +=
-			'<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">INVOICE TYPE</span></h4></div>';
-		inlineHtml += "</div>";
-		inlineHtml += "</div>";
-		var selected_option = isNullorEmpty(invoiceType) ? "selected" : "";
-		inlineHtml +=
-			'<div class="form-group container invoice_type_dropdown_section">';
-		inlineHtml += '<div class="row">';
-		// Period dropdown field
-		inlineHtml += '<div class="col-xs-12 invoice_type_dropdown_div">';
-		inlineHtml += '<div class="input-group">';
-		inlineHtml +=
-			'<span class="input-group-addon" id="invoice_type_dropdown_text">Invoice Type</span>';
-		inlineHtml +=
-			'<select id="invoice_type_dropdown" class="form-control" multiple>';
-		inlineHtml += "<option " + selected_option + ' value="0">All</option>';
-		inlineHtml += '<option value="1">Services - Excluding NP</option>';
-		inlineHtml += '<option value="4">NeoPost</option>';
-		inlineHtml += '<option value="8">MPEX</option>';
-		inlineHtml += "</select>";
-		inlineHtml += "</div></div></div></div>";
-
-		return inlineHtml;
-	}
 
 	/**
 	 * The table that will display the differents invoices linked to the franchisee and the time period.
@@ -819,7 +1321,20 @@ define([
 		inlineHtml += "</tr>";
 		inlineHtml += "</thead>";
 
-		inlineHtml += '<tbody id="result_usage_' + name + '" ></tbody>';
+		inlineHtml += '<tbody id="result_usage_' + name + '" >';
+		if (name == "customer_list") {
+			log.audit({
+				title: "name",
+				details: name,
+			});
+			log.audit({
+				title: "customerListTableHTML",
+				details: customerListTableHTML,
+			});
+
+			inlineHtml += customerListTableHTML;
+		}
+		inlineHtml += "</tbody>";
 
 		inlineHtml += "</table></div>";
 		return inlineHtml;

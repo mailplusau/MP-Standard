@@ -92,6 +92,20 @@ define([
 				// 	start_date = date_from;
 				// 	last_date = GetFormattedDate(lastDay);
 				// }
+			} else {
+				var startDateArray = start_date.split("-");
+				var lastDateArray = last_date.split("-");
+				var date_from = new Date(
+					startDateArray[0],
+					startDateArray[1] - 1,
+					startDateArray[2]
+				);
+				var date_to = new Date(
+					lastDateArray[0],
+					lastDateArray[1] - 1,
+					lastDateArray[2]
+				);
+
 			}
 
 			var stateID = context.request.parameters.state;
@@ -153,8 +167,26 @@ define([
 				id: "customsearch_prod_stock_usage_report___4",
 			});
 
+			log.audit({
+				title: "start_date",
+				details: start_date,
+			});
+			log.audit({
+				title: "last_date",
+				details: last_date,
+			});
+
 			var date_from_v2 = dateISOToNetsuite(date_from);
 			var date_to_v2 = dateISOToNetsuite(date_to);
+
+			log.audit({
+				title: "date_from_v2",
+				details: date_from_v2,
+			});
+			log.audit({
+				title: "date_to_v2",
+				details: date_to_v2,
+			});
 
 			if (!isNullorEmpty(date_from_v2) && !isNullorEmpty(date_to_v2)) {
 				mpProdsScansPerCustomerSearch.filters.push(
@@ -340,94 +372,12 @@ define([
 						oldCustomerName != null &&
 						oldCustomerName != customerName
 					) {
-						// var customer_record = record.load({
-						// 	type: "customer",
-						// 	id: parseInt(oldCustomerId),
-						// });
-
-						// var mpProdWeeklyUsage = customer_record.getValue({
-						// 	fieldId: "custentity_actual_mpex_weekly_usage",
-						// });
-
 						var firstWeekofUsage = "";
 						var lastWeekofUsage = "";
 						var lastWeekUsageCount = 0;
 						var avgWeeklyUsageCount = 0;
 						var noOfWeeks = 0;
 						var tempTotal = 0;
-
-						// if (!isNullorEmpty(mpProdWeeklyUsage)) {
-						// 	var parsedUsage = JSON.parse(mpProdWeeklyUsage);
-						// 	noOfWeeks = parsedUsage["Usage"].length;
-						// 	for (var x = 0; x < parsedUsage["Usage"].length; x++) {
-						// 		var parts = parsedUsage["Usage"][x]["Week Used"].split("/");
-
-						// 		if (x == 0) {
-						// 			firstWeekofUsage =
-						// 				parts[2] +
-						// 				"-" +
-						// 				("0" + parts[1]).slice(-2) +
-						// 				"-" +
-						// 				("0" + parts[0]).slice(-2) +
-						// 				" - Usage: " +
-						// 				parsedUsage["Usage"][x]["Count"];
-						// 		}
-
-						// 		if (x == parsedUsage["Usage"].length - 1) {
-						// 			lastWeekofUsage =
-						// 				parts[2] +
-						// 				"-" +
-						// 				("0" + parts[1]).slice(-2) +
-						// 				"-" +
-						// 				("0" + parts[0]).slice(-2) +
-						// 				" - Usage: " +
-						// 				parsedUsage["Usage"][x]["Count"];
-						// 			lastWeekUsageCount = parseInt(
-						// 				parsedUsage["Usage"][x]["Count"]
-						// 			);
-						// 		}
-
-						// 		tempTotal += parseInt(parsedUsage["Usage"][x]["Count"]);
-						// 	}
-						// 	avgWeeklyUsageCount = parseFloat(tempTotal / noOfWeeks).toFixed(
-						// 		2
-						// 	);
-						// }
-
-						// var viewLinks =
-						// 	'<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&custid=' +
-						// 	oldCustomerId +
-						// 	'" target=_blank>USAGE</a>';
-
-						// customerListTableHTML += "<tr>";
-						// customerListTableHTML += "<td>" + viewLinks + "</td>";
-						// customerListTableHTML += "<td>" + oldCustomerName + "</td>";
-						// customerListTableHTML += "<td>" + oldFranchiseeName + "</td>";
-						// customerListTableHTML += "<td>" + firstWeekofUsage + "</td>";
-						// customerListTableHTML += "<td>" + lastWeekofUsage + "</td>";
-						// customerListTableHTML += "<td>" + avgWeeklyUsageCount + "</td>";
-						// customerListTableHTML +=
-						// 	"<td>" + express_speed_cust_usage + "</td>";
-						// customerListTableHTML +=
-						// 	"<td>" + standard_speed_cust_usage + "</td>";
-						// customerListTableHTML +=
-						// 	"<td>" + premium_speed_cust_usage + "</td>";
-						// customerListTableHTML += "<td>" + total_usage_cust_usage + "</td>";
-						// customerListTableHTML +=
-						// 	'<td class="tableVerticalAlign"><button class="form-control btn btn-xs btn-info" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
-						// 	oldCustomerId +
-						// 	'" data-type="completed" class="createUserNote" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
-						// 	notesTask +
-						// 	'</a></button> <button class="form-control btn btn-xs btn-warning" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
-						// 	oldCustomerId +
-						// 	'" data-type="completed" class="serviceChange" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
-						// 	serviceChangeTask +
-						// 	'</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
-						// 	oldCustomerId +
-						// 	'" data-type="completed" class="cancelCustomer" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
-						// 	cancelTask +
-						// 	"</a></button></td>";
-						// customerListTableHTML += "</tr>";
 
 						debt_set2.push({
 							customerId: oldCustomerId,
@@ -484,87 +434,12 @@ define([
 				});
 
 			if (count3 > 0) {
-				// var customer_record = record.load({
-				// 	type: "customer",
-				// 	id: parseInt(oldCustomerId),
-				// });
-
-				// var mpProdWeeklyUsage = customer_record.getValue({
-				// 	fieldId: "custentity_actual_mpex_weekly_usage",
-				// });
-
 				var firstWeekofUsage = "";
 				var lastWeekofUsage = "";
 				var lastWeekUsageCount = 0;
 				var avgWeeklyUsageCount = 0;
 				var noOfWeeks = 0;
 				var tempTotal = 0;
-
-				// if (!isNullorEmpty(mpProdWeeklyUsage)) {
-				// 	var parsedUsage = JSON.parse(mpProdWeeklyUsage);
-				// 	noOfWeeks = parsedUsage["Usage"].length;
-				// 	for (var x = 0; x < parsedUsage["Usage"].length; x++) {
-				// 		var parts = parsedUsage["Usage"][x]["Week Used"].split("/");
-
-				// 		if (x == 0) {
-				// 			firstWeekofUsage =
-				// 				parts[2] +
-				// 				"-" +
-				// 				("0" + parts[1]).slice(-2) +
-				// 				"-" +
-				// 				("0" + parts[0]).slice(-2) +
-				// 				" - Usage: " +
-				// 				parsedUsage["Usage"][x]["Count"];
-				// 		}
-
-				// 		if (x == parsedUsage["Usage"].length - 1) {
-				// 			lastWeekofUsage =
-				// 				parts[2] +
-				// 				"-" +
-				// 				("0" + parts[1]).slice(-2) +
-				// 				"-" +
-				// 				("0" + parts[0]).slice(-2) +
-				// 				" - Usage: " +
-				// 				parsedUsage["Usage"][x]["Count"];
-				// 			lastWeekUsageCount = parseInt(parsedUsage["Usage"][x]["Count"]);
-				// 		}
-
-				// 		tempTotal += parseInt(parsedUsage["Usage"][x]["Count"]);
-				// 	}
-				// 	avgWeeklyUsageCount = parseFloat(tempTotal / noOfWeeks).toFixed(2);
-				// }
-
-				// var viewLinks =
-				// 	'<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&custid=' +
-				// 	oldCustomerId +
-				// 	'" target=_blank>USAGE</a>';
-
-				// customerListTableHTML += "<tr>";
-				// customerListTableHTML += "<td>" + viewLinks + "</td>";
-				// customerListTableHTML += "<td>" + oldCustomerName + "</td>";
-				// customerListTableHTML += "<td>" + oldFranchiseeName + "</td>";
-				// customerListTableHTML += "<td>" + firstWeekofUsage + "</td>";
-				// customerListTableHTML += "<td>" + lastWeekofUsage + "</td>";
-				// customerListTableHTML += "<td>" + avgWeeklyUsageCount + "</td>";
-				// customerListTableHTML += "<td>" + express_speed_cust_usage + "</td>";
-				// customerListTableHTML += "<td>" + standard_speed_cust_usage + "</td>";
-				// customerListTableHTML += "<td>" + premium_speed_cust_usage + "</td>";
-				// customerListTableHTML += "<td>" + total_usage_cust_usage + "</td>";
-				// customerListTableHTML +=
-				// 	'<td class="tableVerticalAlign"><button class="form-control btn btn-xs btn-info" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
-				// 	oldCustomerId +
-				// 	'" data-type="completed" class="createUserNote" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
-				// 	notesTask +
-				// 	'</a></button> <button class="form-control btn btn-xs btn-warning" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
-				// 	oldCustomerId +
-				// 	'" data-type="completed" class="serviceChange" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
-				// 	serviceChangeTask +
-				// 	'</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
-				// 	oldCustomerId +
-				// 	'" data-type="completed" class="cancelCustomer" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
-				// 	cancelTask +
-				// 	"</a></button></td>";
-				// customerListTableHTML += "</tr>";
 
 				debt_set2.push({
 					customerId: oldCustomerId,
@@ -597,87 +472,185 @@ define([
 				details: debt_set2,
 			});
 
-			for (var i = 0; i < 100; i++) {
-				var customer_record = record.load({
-					type: "customer",
-					id: parseInt(debt_set2[i].customerId),
-				});
+			if (debt_set2.length > 100) {
+				for (var i = 0; i < 100; i++) {
+					var customer_record = record.load({
+						type: "customer",
+						id: parseInt(debt_set2[i].customerId),
+					});
 
-				var mpProdWeeklyUsage = customer_record.getValue({
-					fieldId: "custentity_actual_mpex_weekly_usage",
-				});
+					var mpProdWeeklyUsage = customer_record.getValue({
+						fieldId: "custentity_actual_mpex_weekly_usage",
+					});
 
-				var firstWeekofUsage = "";
-				var lastWeekofUsage = "";
-				var lastWeekUsageCount = 0;
-				var avgWeeklyUsageCount = 0;
-				var noOfWeeks = 0;
-				var tempTotal = 0;
+					var firstWeekofUsage = "";
+					var lastWeekofUsage = "";
+					var lastWeekUsageCount = 0;
+					var avgWeeklyUsageCount = 0;
+					var noOfWeeks = 0;
+					var tempTotal = 0;
 
-				if (!isNullorEmpty(mpProdWeeklyUsage)) {
-					var parsedUsage = JSON.parse(mpProdWeeklyUsage);
-					noOfWeeks = parsedUsage["Usage"].length;
-					for (var x = 0; x < parsedUsage["Usage"].length; x++) {
-						var parts = parsedUsage["Usage"][x]["Week Used"].split("/");
+					if (!isNullorEmpty(mpProdWeeklyUsage)) {
+						var parsedUsage = JSON.parse(mpProdWeeklyUsage);
+						noOfWeeks = parsedUsage["Usage"].length;
+						for (var x = 0; x < parsedUsage["Usage"].length; x++) {
+							var parts = parsedUsage["Usage"][x]["Week Used"].split("/");
 
-						if (x == 0) {
-							firstWeekofUsage =
-								parts[2] +
-								"-" +
-								("0" + parts[1]).slice(-2) +
-								"-" +
-								("0" + parts[0]).slice(-2) +
-								" - Usage: " +
-								parsedUsage["Usage"][x]["Count"];
+							if (x == 0) {
+								firstWeekofUsage =
+									"Week Starting: " +
+									parts[2] +
+									"-" +
+									("0" + parts[1]).slice(-2) +
+									"-" +
+									("0" + parts[0]).slice(-2) +
+									"</br> Usage: " +
+									parsedUsage["Usage"][x]["Count"];
+							}
+
+							if (x == parsedUsage["Usage"].length - 1) {
+								lastWeekofUsage =
+									"Week Starting: " +
+									parts[2] +
+									"-" +
+									("0" + parts[1]).slice(-2) +
+									"-" +
+									("0" + parts[0]).slice(-2) +
+									"</br>Usage: " +
+									parsedUsage["Usage"][x]["Count"];
+								lastWeekUsageCount = parseInt(parsedUsage["Usage"][x]["Count"]);
+							}
+
+							tempTotal += parseInt(parsedUsage["Usage"][x]["Count"]);
 						}
-
-						if (x == parsedUsage["Usage"].length - 1) {
-							lastWeekofUsage =
-								parts[2] +
-								"-" +
-								("0" + parts[1]).slice(-2) +
-								"-" +
-								("0" + parts[0]).slice(-2) +
-								" - Usage: " +
-								parsedUsage["Usage"][x]["Count"];
-							lastWeekUsageCount = parseInt(parsedUsage["Usage"][x]["Count"]);
-						}
-
-						tempTotal += parseInt(parsedUsage["Usage"][x]["Count"]);
+						avgWeeklyUsageCount = parseFloat(tempTotal / noOfWeeks).toFixed(2);
 					}
-					avgWeeklyUsageCount = parseFloat(tempTotal / noOfWeeks).toFixed(2);
-				}
 
-				var viewLinks =
-					'<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&custid=' +
-					debt_set2[i].customerId +
-					'" target=_blank>USAGE</a>';
-				customerListTableHTML += "<tr>";
-				customerListTableHTML += "<td>" + viewLinks + "</td>";
-				customerListTableHTML += "<td>" + debt_set2[i].customerName + "</td>";
-				customerListTableHTML += "<td>" + debt_set2[i].franchiseeName + "</td>";
-				customerListTableHTML += "<td>" + firstWeekofUsage + "</td>";
-				customerListTableHTML += "<td>" + lastWeekofUsage + "</td>";
-				customerListTableHTML += "<td>" + avgWeeklyUsageCount + "</td>";
-				customerListTableHTML += "<td>" + debt_set2[i].express_speed + "</td>";
-				customerListTableHTML += "<td>" + debt_set2[i].standard_speed + "</td>";
-				customerListTableHTML += "<td>" + debt_set2[i].premium_speed + "</td>";
-				customerListTableHTML += "<td>" + debt_set2[i].total_usage + "</td>";
-				customerListTableHTML +=
-					'<td class="tableVerticalAlign"><button class="form-control btn btn-xs btn-info" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
-					debt_set2[i].customerId +
-					'" data-type="completed" class="createUserNote" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
-					notesTask +
-					'</a></button> <button class="form-control btn btn-xs btn-warning" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
-					debt_set2[i].customerId +
-					'" data-type="completed" class="serviceChange" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
-					serviceChangeTask +
-					'</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
-					debt_set2[i].customerId +
-					'" data-type="completed" class="cancelCustomer" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
-					cancelTask +
-					"</a></button></td>";
-				customerListTableHTML += "</tr>";
+					var viewLinks =
+						'<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&custid=' +
+						debt_set2[i].customerId +
+						'" target=_blank>USAGE</a>';
+					customerListTableHTML += "<tr>";
+					customerListTableHTML += "<td>" + viewLinks + "</td>";
+					customerListTableHTML += "<td>" + debt_set2[i].customerName + "</td>";
+					customerListTableHTML +=
+						"<td>" + debt_set2[i].franchiseeName + "</td>";
+					customerListTableHTML += "<td>" + firstWeekofUsage + "</td>";
+					customerListTableHTML += "<td>" + lastWeekofUsage + "</td>";
+					customerListTableHTML += "<td>" + noOfWeeks + "</td>";
+					customerListTableHTML += "<td>" + avgWeeklyUsageCount + "</td>";
+					customerListTableHTML +=
+						"<td>" + debt_set2[i].express_speed + "</td>";
+					customerListTableHTML +=
+						"<td>" + debt_set2[i].standard_speed + "</td>";
+					customerListTableHTML +=
+						"<td>" + debt_set2[i].premium_speed + "</td>";
+					customerListTableHTML += "<td>" + debt_set2[i].total_usage + "</td>";
+					customerListTableHTML +=
+						'<td class="tableVerticalAlign"><button class="form-control btn btn-xs btn-info" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						debt_set2[i].customerId +
+						'" data-type="completed" class="createUserNote" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						notesTask +
+						'</a></button> <button class="form-control btn btn-xs btn-warning" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						debt_set2[i].customerId +
+						'" data-type="completed" class="serviceChange" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						serviceChangeTask +
+						'</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						debt_set2[i].customerId +
+						'" data-type="completed" class="cancelCustomer" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						cancelTask +
+						"</a></button></td>";
+					customerListTableHTML += "</tr>";
+				}
+			} else {
+				for (var i = 0; i < debt_set2.length; i++) {
+					var customer_record = record.load({
+						type: "customer",
+						id: parseInt(debt_set2[i].customerId),
+					});
+
+					var mpProdWeeklyUsage = customer_record.getValue({
+						fieldId: "custentity_actual_mpex_weekly_usage",
+					});
+
+					var firstWeekofUsage = "";
+					var lastWeekofUsage = "";
+					var lastWeekUsageCount = 0;
+					var avgWeeklyUsageCount = 0;
+					var noOfWeeks = 0;
+					var tempTotal = 0;
+
+					if (!isNullorEmpty(mpProdWeeklyUsage)) {
+						var parsedUsage = JSON.parse(mpProdWeeklyUsage);
+						noOfWeeks = parsedUsage["Usage"].length;
+						for (var x = 0; x < parsedUsage["Usage"].length; x++) {
+							var parts = parsedUsage["Usage"][x]["Week Used"].split("/");
+
+							if (x == 0) {
+								firstWeekofUsage =
+									"Week Starting: " +
+									parts[2] +
+									"-" +
+									("0" + parts[1]).slice(-2) +
+									"-" +
+									("0" + parts[0]).slice(-2) +
+									"</br>Usage: " +
+									parsedUsage["Usage"][x]["Count"];
+							}
+
+							if (x == parsedUsage["Usage"].length - 1) {
+								lastWeekofUsage =
+									"Week Starting: " +
+									parts[2] +
+									"-" +
+									("0" + parts[1]).slice(-2) +
+									"-" +
+									("0" + parts[0]).slice(-2) +
+									"</br>Usage: " +
+									parsedUsage["Usage"][x]["Count"];
+								lastWeekUsageCount = parseInt(parsedUsage["Usage"][x]["Count"]);
+							}
+
+							tempTotal += parseInt(parsedUsage["Usage"][x]["Count"]);
+						}
+						avgWeeklyUsageCount = parseFloat(tempTotal / noOfWeeks).toFixed(2);
+					}
+
+					var viewLinks =
+						'<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&custid=' +
+						debt_set2[i].customerId +
+						'" target=_blank>USAGE</a>';
+					customerListTableHTML += "<tr>";
+					customerListTableHTML += "<td>" + viewLinks + "</td>";
+					customerListTableHTML += "<td>" + debt_set2[i].customerName + "</td>";
+					customerListTableHTML +=
+						"<td>" + debt_set2[i].franchiseeName + "</td>";
+					customerListTableHTML += "<td>" + firstWeekofUsage + "</td>";
+					customerListTableHTML += "<td>" + lastWeekofUsage + "</td>";
+					customerListTableHTML += "<td>" + avgWeeklyUsageCount + "</td>";
+					customerListTableHTML +=
+						"<td>" + debt_set2[i].express_speed + "</td>";
+					customerListTableHTML +=
+						"<td>" + debt_set2[i].standard_speed + "</td>";
+					customerListTableHTML +=
+						"<td>" + debt_set2[i].premium_speed + "</td>";
+					customerListTableHTML += "<td>" + debt_set2[i].total_usage + "</td>";
+					customerListTableHTML +=
+						'<td class="tableVerticalAlign"><button class="form-control btn btn-xs btn-info" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						debt_set2[i].customerId +
+						'" data-type="completed" class="createUserNote" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						notesTask +
+						'</a></button> <button class="form-control btn btn-xs btn-warning" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						debt_set2[i].customerId +
+						'" data-type="completed" class="serviceChange" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						serviceChangeTask +
+						'</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;border-radius: 30px;"><a data-id="' +
+						debt_set2[i].customerId +
+						'" data-type="completed" class="cancelCustomer" style="cursor: pointer !important;color: white;border-radius: 30px;">' +
+						cancelTask +
+						"</a></button></td>";
+					customerListTableHTML += "</tr>";
+				}
 			}
 
 			var inlineHtml =

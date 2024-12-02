@@ -127,6 +127,8 @@ define([
 		today_month = "0" + today_month;
 	}
 
+	var lastWeekStartDate = getLastWeekSunday();
+
 	var todayString = today_day_in_month + "/" + today_month + "/" + today_year;
 	// console.log('Todays Date: ' + todayString);
 
@@ -621,6 +623,9 @@ define([
 					title: "Last Week Usage", //4
 				},
 				{
+					title: "Weeks of Usage", //4
+				},
+				{
 					title: "Average Weekly Usage", //5
 				},
 				{
@@ -644,7 +649,22 @@ define([
 					targets: [1, 2, 9],
 					className: "bolded",
 				},
+				{
+					targets: [5, 6],
+					className: "col-xs-1",
+				},
 			],
+			rowCallback: function (row, data, index) {
+				var col4Array = data[4].split("Week Starting:");
+				var lastWeekUsage = col4Array[1].split("<br>");
+				lastWeekUsage[0] = removeSpaces(lastWeekUsage[0]);
+
+				if (lastWeekUsage[0] == lastWeekStartDate) {
+					$("td", row).css("background-color", "#CCF99CFF");
+				} else {
+					$("td", row).css("background-color", "#e97677");
+				}
+			},
 		});
 
 		dataTable3 = $("#mpexusage-zee_list").DataTable({
@@ -2918,27 +2938,27 @@ define([
 			if (data2.length > 20) {
 				for (var i = 0; i < 20; i++) {
 					month_year_cust_list.push(data2[i][1]);
-					expSpeed_cust_list[data2[i][1]] = data2[i][6];
-					prmSpeed_cust_list[data2[i][1]] = data2[i][8];
-					stdSpeed_cust_list[data2[i][1]] = data2[i][7]; // creating
-					totalUsage_cust_list[data2[i][1]] = data2[i][9]; //
+					expSpeed_cust_list[data2[i][1]] = data2[i][7];
+					prmSpeed_cust_list[data2[i][1]] = data2[i][9];
+					stdSpeed_cust_list[data2[i][1]] = data2[i][8]; // creating
+					totalUsage_cust_list[data2[i][1]] = data2[i][10]; //
 				}
 			} else {
 				for (var i = 0; i < data2.length; i++) {
 					month_year_cust_list.push(data2[i][1]);
-					expSpeed_cust_list[data2[i][1]] = data2[i][6];
-					prmSpeed_cust_list[data2[i][1]] = data2[i][8];
-					stdSpeed_cust_list[data2[i][1]] = data2[i][7]; // creating
-					totalUsage_cust_list[data2[i][1]] = data2[i][9]; //
+					expSpeed_cust_list[data2[i][1]] = data2[i][7];
+					prmSpeed_cust_list[data2[i][1]] = data2[i][9];
+					stdSpeed_cust_list[data2[i][1]] = data2[i][8]; // creating
+					totalUsage_cust_list[data2[i][1]] = data2[i][10]; //
 				}
 			}
 		} else {
 			for (var i = 0; i < data2.length; i++) {
 				month_year_cust_list.push(data2[i][1]);
-				expSpeed_cust_list[data2[i][1]] = data2[i][6];
-				prmSpeed_cust_list[data2[i][1]] = data2[i][8];
-				stdSpeed_cust_list[data2[i][1]] = data2[i][7]; // creating
-				totalUsage_cust_list[data2[i][1]] = data2[i][9]; //
+				expSpeed_cust_list[data2[i][1]] = data2[i][7];
+				prmSpeed_cust_list[data2[i][1]] = data2[i][9];
+				stdSpeed_cust_list[data2[i][1]] = data2[i][8]; // creating
+				totalUsage_cust_list[data2[i][1]] = data2[i][10]; //
 			}
 		}
 
@@ -4735,6 +4755,77 @@ define([
 		});
 
 		return date;
+	}
+
+	function getLastWeekSunday() {
+		var today = new Date();
+		var lastSunday = new Date(
+			today.setDate(today.getDate() - today.getDay() - 7)
+		);
+		var year = lastSunday.getFullYear();
+		var month = customPadStart((lastSunday.getMonth() + 1).toString(), 2, "0"); // Months are zero-based
+		var day = customPadStart(lastSunday.getDate().toString(), 2, "0");
+
+		return year + "-" + month + "-" + day;
+	}
+
+	/**
+	 * @description Pads the current string with another string (multiple times, if needed) until the resulting string reaches the given length. The padding is applied from the start (left) of the current string.
+	 * @param {string} str - The original string to pad.
+	 * @param {number} targetLength - The length of the resulting string once the current string has been padded.
+	 * @param {string} padString - The string to pad the current string with. Defaults to a space if not provided.
+	 * @returns {string} The padded string.
+	 */
+	function customPadStart(str, targetLength, padString) {
+		// Convert the input to a string
+		str = String(str);
+
+		// If the target length is less than or equal to the string's length, return the original string
+		if (str.length >= targetLength) {
+			return str;
+		}
+
+		// Calculate the length of the padding needed
+		var paddingLength = targetLength - str.length;
+
+		// Repeat the padString enough times to cover the padding length
+		var repeatedPadString = customRepeat(
+			padString,
+			Math.ceil(paddingLength / padString.length)
+		);
+
+		// Slice the repeated padString to the exact padding length needed and concatenate with the original string
+		return repeatedPadString.slice(0, paddingLength) + str;
+	}
+
+	/**
+	 * @description Repeats the given string a specified number of times.
+	 * @param {string} str - The string to repeat.
+	 * @param {number} count - The number of times to repeat the string.
+	 * @returns {string} The repeated string.
+	 */
+	function customRepeat(str, count) {
+		// Convert the input to a string
+		str = String(str);
+
+		// If the count is 0 or less, return an empty string
+		if (count <= 0) {
+			return "";
+		}
+
+		// Initialize the result string
+		var result = "";
+
+		// Repeat the string by concatenating it to the result
+		for (var i = 0; i < count; i++) {
+			result += str;
+		}
+
+		return result;
+	}
+
+	function removeSpaces(str) {
+		return str.replace(/\s+/g, "");
 	}
 
 	function isNullorEmpty(val) {

@@ -559,7 +559,7 @@ define([
 			destroy: true,
 			// data: debtDataSet2,
 			pageLength: 20,
-			order: [[9, "desc"]],
+			order: [[10, "desc"]],
 			layout: {
 				topStart: {
 					buttons: [
@@ -623,30 +623,30 @@ define([
 					title: "Last Week Usage", //4
 				},
 				{
-					title: "Weeks of Usage", //4
+					title: "Weeks of Usage", //5
 				},
 				{
-					title: "Average Weekly Usage", //5
+					title: "Average Weekly Usage", //6
 				},
 				{
-					title: "Express Usage", //6
+					title: "Express Usage", //7
 				},
 				{
-					title: "Standard Usage", //7
+					title: "Standard Usage", //8
 				},
 				{
-					title: "Premium Usage", //8
+					title: "Premium Usage", //9
 				},
 				{
-					title: "Total Usage", //9
+					title: "Total Usage", //10
 				},
 				{
-					title: "Action Buttons", //10
+					title: "Action Buttons", //11
 				},
 			],
 			columnDefs: [
 				{
-					targets: [1, 2, 9],
+					targets: [1, 2, 10],
 					className: "bolded",
 				},
 				{
@@ -2938,27 +2938,27 @@ define([
 			if (data2.length > 20) {
 				for (var i = 0; i < 20; i++) {
 					month_year_cust_list.push(data2[i][1]);
-					expSpeed_cust_list[data2[i][1]] = data2[i][7];
-					prmSpeed_cust_list[data2[i][1]] = data2[i][9];
-					stdSpeed_cust_list[data2[i][1]] = data2[i][8]; // creating
-					totalUsage_cust_list[data2[i][1]] = data2[i][10]; //
+					expSpeed_cust_list[data2[i][1]] = data2[i][8];
+					prmSpeed_cust_list[data2[i][1]] = data2[i][10];
+					stdSpeed_cust_list[data2[i][1]] = data2[i][9]; // creating
+					totalUsage_cust_list[data2[i][1]] = data2[i][11]; //
 				}
 			} else {
 				for (var i = 0; i < data2.length; i++) {
 					month_year_cust_list.push(data2[i][1]);
-					expSpeed_cust_list[data2[i][1]] = data2[i][7];
-					prmSpeed_cust_list[data2[i][1]] = data2[i][9];
-					stdSpeed_cust_list[data2[i][1]] = data2[i][8]; // creating
-					totalUsage_cust_list[data2[i][1]] = data2[i][10]; //
+					expSpeed_cust_list[data2[i][1]] = data2[i][8];
+					prmSpeed_cust_list[data2[i][1]] = data2[i][10];
+					stdSpeed_cust_list[data2[i][1]] = data2[i][9]; // creating
+					totalUsage_cust_list[data2[i][1]] = data2[i][11]; //
 				}
 			}
 		} else {
 			for (var i = 0; i < data2.length; i++) {
 				month_year_cust_list.push(data2[i][1]);
-				expSpeed_cust_list[data2[i][1]] = data2[i][7];
-				prmSpeed_cust_list[data2[i][1]] = data2[i][9];
-				stdSpeed_cust_list[data2[i][1]] = data2[i][8]; // creating
-				totalUsage_cust_list[data2[i][1]] = data2[i][10]; //
+				expSpeed_cust_list[data2[i][1]] = data2[i][8];
+				prmSpeed_cust_list[data2[i][1]] = data2[i][10];
+				stdSpeed_cust_list[data2[i][1]] = data2[i][9]; // creating
+				totalUsage_cust_list[data2[i][1]] = data2[i][11]; //
 			}
 		}
 

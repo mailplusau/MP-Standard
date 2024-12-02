@@ -2938,27 +2938,27 @@ define([
 			if (data2.length > 20) {
 				for (var i = 0; i < 20; i++) {
 					month_year_cust_list.push(data2[i][1]);
-					expSpeed_cust_list[data2[i][1]] = data2[i][8];
-					prmSpeed_cust_list[data2[i][1]] = data2[i][10];
-					stdSpeed_cust_list[data2[i][1]] = data2[i][9]; // creating
-					totalUsage_cust_list[data2[i][1]] = data2[i][11]; //
+					expSpeed_cust_list[data2[i][1]] = data2[i][7];
+					prmSpeed_cust_list[data2[i][1]] = data2[i][9];
+					stdSpeed_cust_list[data2[i][1]] = data2[i][8]; // creating
+					totalUsage_cust_list[data2[i][1]] = data2[i][10]; //
 				}
 			} else {
 				for (var i = 0; i < data2.length; i++) {
 					month_year_cust_list.push(data2[i][1]);
-					expSpeed_cust_list[data2[i][1]] = data2[i][8];
-					prmSpeed_cust_list[data2[i][1]] = data2[i][10];
-					stdSpeed_cust_list[data2[i][1]] = data2[i][9]; // creating
-					totalUsage_cust_list[data2[i][1]] = data2[i][11]; //
+					expSpeed_cust_list[data2[i][1]] = data2[i][7];
+					prmSpeed_cust_list[data2[i][1]] = data2[i][9];
+					stdSpeed_cust_list[data2[i][1]] = data2[i][8]; // creating
+					totalUsage_cust_list[data2[i][1]] = data2[i][10]; //
 				}
 			}
 		} else {
 			for (var i = 0; i < data2.length; i++) {
 				month_year_cust_list.push(data2[i][1]);
-				expSpeed_cust_list[data2[i][1]] = data2[i][8];
-				prmSpeed_cust_list[data2[i][1]] = data2[i][10];
-				stdSpeed_cust_list[data2[i][1]] = data2[i][9]; // creating
-				totalUsage_cust_list[data2[i][1]] = data2[i][11]; //
+				expSpeed_cust_list[data2[i][1]] = data2[i][7];
+				prmSpeed_cust_list[data2[i][1]] = data2[i][9];
+				stdSpeed_cust_list[data2[i][1]] = data2[i][8]; // creating
+				totalUsage_cust_list[data2[i][1]] = data2[i][10]; //
 			}
 		}
 

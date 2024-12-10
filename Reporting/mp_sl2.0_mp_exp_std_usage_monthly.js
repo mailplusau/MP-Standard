@@ -94,18 +94,29 @@ define([
 				// }
 			} else {
 				var startDateArray = start_date.split("-");
-				var lastDateArray = last_date.split("-");
+				if (isNullorEmpty(last_date)) {
+					var date = new Date();
+					var y = date.getFullYear();
+					var m = date.getMonth();
+
+					var lastDay = new Date(y, m + 1, 0);
+
+					date_to = lastDay;
+					last_date = GetFormattedDate(date_to);
+				} else {
+					var lastDateArray = last_date.split("-");
+					var date_to = new Date(
+						lastDateArray[0],
+						lastDateArray[1] - 1,
+						lastDateArray[2]
+					);
+				}
+
 				var date_from = new Date(
 					startDateArray[0],
 					startDateArray[1] - 1,
 					startDateArray[2]
 				);
-				var date_to = new Date(
-					lastDateArray[0],
-					lastDateArray[1] - 1,
-					lastDateArray[2]
-				);
-
 			}
 
 			var stateID = context.request.parameters.state;
@@ -594,7 +605,7 @@ define([
 									("0" + parts[1]).slice(-2) +
 									"-" +
 									("0" + parts[0]).slice(-2) +
-									"</br>Usage: " +
+									"</br> Usage: " +
 									parsedUsage["Usage"][x]["Count"];
 							}
 
@@ -627,6 +638,7 @@ define([
 						"<td>" + debt_set2[i].franchiseeName + "</td>";
 					customerListTableHTML += "<td>" + firstWeekofUsage + "</td>";
 					customerListTableHTML += "<td>" + lastWeekofUsage + "</td>";
+					customerListTableHTML += "<td>" + noOfWeeks + "</td>";
 					customerListTableHTML += "<td>" + avgWeeklyUsageCount + "</td>";
 					customerListTableHTML +=
 						"<td>" + debt_set2[i].express_speed + "</td>";

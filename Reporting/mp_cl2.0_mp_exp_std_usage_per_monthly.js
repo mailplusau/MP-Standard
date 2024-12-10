@@ -370,6 +370,43 @@ define([
 
 			var userNoteRecordId = userNoteRecord.save();
 
+			var task_record = record.create({
+				type: "task",
+			});
+			var date = new Date();
+			format.format({
+				value: date,
+				type: format.Type.DATE,
+				timezone: format.Timezone.AUSTRALIA_SYDNEY,
+			});
+			task_record.setValue({
+				fieldId: "duedate",
+				value: getDateStoreNS(),
+			});
+
+			task_record.setValue({
+				fieldId: "company",
+				value: customerInternalID,
+			});
+
+			task_record.setValue({
+				fieldId: "title",
+				value: "MP Product Scans - " + companyName,
+			});
+
+			task_record.setValue({
+				fieldId: "custevent_organiser",
+				value: runtime.getCurrentUser().id,
+			});
+			task_record.setValue({
+				fieldId: "assigned",
+				value: runtime.getCurrentUser().id,
+			});
+
+			task_record.save({
+				ignoreMandatoryFields: true,
+			});
+
 			var url = baseURL + "/app/site/hosting/scriptlet.nl?script=1948&deploy=1";
 			window.location.href = url;
 		});

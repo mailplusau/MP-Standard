@@ -379,6 +379,23 @@ define([
 				type: format.Type.DATE,
 				timezone: format.Timezone.AUSTRALIA_SYDNEY,
 			});
+
+			var startDate = new Date();
+			var endDate = new Date();
+
+			format.format({
+				value: startDate,
+				type: format.Type.DATE,
+				timezone: format.Timezone.AUSTRALIA_SYDNEY,
+			});
+
+			format.format({
+				value: endDate,
+				type: format.Type.DATE,
+				timezone: format.Timezone.AUSTRALIA_SYDNEY,
+			});
+			endDate.setHours(startDate.getHours(), startDate.getMinutes() + 15, 0, 0);
+
 			task_record.setValue({
 				fieldId: "duedate",
 				value: getDateStoreNS(),
@@ -387,6 +404,20 @@ define([
 			task_record.setValue({
 				fieldId: "company",
 				value: customerInternalID,
+			});
+
+			task_record.setValue({
+				fieldId: "timedevent",
+				value: true,
+			});
+
+			task_record.setValue({
+				fieldId: "starttime",
+				value: startDate,
+			});
+			task_record.setValue({
+				fieldId: "endtime",
+				value: endDate,
 			});
 
 			task_record.setValue({

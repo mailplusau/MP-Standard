@@ -402,6 +402,10 @@ define([
 				fieldId: "assigned",
 				value: runtime.getCurrentUser().id,
 			});
+			task_record.setValue({
+				fieldId: "status",
+				value: "COMPLETE",
+			});
 
 			task_record.save({
 				ignoreMandatoryFields: true,

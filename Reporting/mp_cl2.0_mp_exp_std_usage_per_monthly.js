@@ -370,6 +370,14 @@ define([
 
 			var userNoteRecordId = userNoteRecord.save();
 
+			var customerRecord = record.load({
+				type: record.Type.CUSTOMER,
+				id: customerInternalID,
+			});
+			var companyName = customerRecord.getValue({
+				fieldId: "companyname",
+			});
+
 			var task_record = record.create({
 				type: "task",
 			});
@@ -4841,6 +4849,17 @@ define([
 		return year + "-" + month + "-" + day;
 	}
 
+	function getCurrentDateTime() {
+		var now = new Date();
+		now.setHours(now.getUTCHours() + 11);
+		var day = customPadStart(now.getDate().toString(), 2, "0");
+		var month = customPadStart((now.getMonth() + 1).toString(), 2, "0"); // Months are zero-based
+		var year = now.getFullYear();
+		var hours = customPadStart(now.getUTCHours().toString(), 2, "0");
+		var minutes = customPadStart(now.getUTCMinutes().toString(), 2, "0");
+		return day + "/" + month + "/" + year + " " + hours + ":" + minutes;
+	}
+
 	/**
 	 * @description Pads the current string with another string (multiple times, if needed) until the resulting string reaches the given length. The padding is applied from the start (left) of the current string.
 	 * @param {string} str - The original string to pad.
@@ -4898,6 +4917,21 @@ define([
 
 	function removeSpaces(str) {
 		return str.replace(/\s+/g, "");
+	}
+
+	function getDateStoreNS() {
+		var date = new Date();
+		// if (date.getHours() > 6) {
+		//     date.setDate(date.getDate() + 1);
+		// }
+
+		format.format({
+			value: date,
+			type: format.Type.DATE,
+			timezone: format.Timezone.AUSTRALIA_SYDNEY,
+		});
+
+		return date;
 	}
 
 	function isNullorEmpty(val) {

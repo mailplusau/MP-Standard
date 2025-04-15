@@ -177,7 +177,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             inlineHtml += '</ul></div>';
 
             // Tabs content
-            inlineHtml += '<div class="data-range_note  hide" style="color: red;text-align: center;font-weight: bolder;font-size: 14px;"><i>Please note, the data shown below is moving over a 3-month period.</i></div></br><div class="tab-content">';
+            inlineHtml += '<div class="data-range_note  hide" style="color: red;text-align: center;font-weight: bolder;font-size: 14px;"><i></i></div></br><div class="tab-content">';
             inlineHtml += '<div role="tabpanel" class="tab-pane active" id="monthly_scans">';
             inlineHtml += '<figure class="highcharts-figure">';
             inlineHtml += '<div id="container_monthly"></div>';

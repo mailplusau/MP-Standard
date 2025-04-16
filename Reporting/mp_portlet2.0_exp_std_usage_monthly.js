@@ -39,55 +39,55 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             var y = date.getFullYear();
             var m = date.getMonth();
             //If begining of the year, show the current financial year, else show the current 
-            if (m < 5) {
-                //Calculate the Current inancial Year
+            // if (m < 5) {
+            //     //Calculate the Current inancial Year
 
-                var firstDay = new Date(y, m, 1);
-                var lastDay = new Date(y, m + 1, 0);
+            //     var firstDay = new Date(y, m, 1);
+            //     var lastDay = new Date(y, m + 1, 0);
 
-                firstDay.setHours(0, 0, 0, 0);
-                lastDay.setHours(0, 0, 0, 0);
+            //     firstDay.setHours(0, 0, 0, 0);
+            //     lastDay.setHours(0, 0, 0, 0);
 
-                if (m >= 6) {
-                    var first_july = new Date(y, 6, 1);
+            //     if (m >= 6) {
+            //         var first_july = new Date(y, 6, 1);
+            //     } else {
+            //         var first_july = new Date(y - 1, 6, 1);
+            //     }
+            //     date_from = first_july;
+            //     date_to = lastDay;
+
+            //     var start_date = GetFormattedDate(date_from);
+            //     var last_date = GetFormattedDate(date_to);
+            // } else {
+            //Calculate the Current Calendar Year
+            // var today_day_in_month = date.getDate();
+            // var today_date = new Date(Date.UTC(y, m, today_day_in_month))
+            // var first_day_in_year = new Date(Date.UTC(y, 0));
+            // var date_from = first_day_in_year.toISOString().split('T')[0];
+            // var date_to = today_date.toISOString().split('T')[0];
+
+            // var start_date = date_from;
+            // var last_date = last_date;
+            var i = 0;
+            var lastDay = new Date(y, m + 1, 0);
+            do {
+                // months.push(m[parseInt((month > 9 ? "" : "0") + month)] + '-' + year);
+                if (m == 1) {
+                    m = 12;
+                    y--;
                 } else {
-                    var first_july = new Date(y - 1, 6, 1);
+                    m--;
                 }
-                date_from = first_july;
-                date_to = lastDay;
+                i++;
+            } while (i < 2);
 
-                var start_date = GetFormattedDate(date_from);
-                var last_date = GetFormattedDate(date_to);
-            } else {
-                //Calculate the Current Calendar Year
-                // var today_day_in_month = date.getDate();
-                // var today_date = new Date(Date.UTC(y, m, today_day_in_month))
-                // var first_day_in_year = new Date(Date.UTC(y, 0));
-                // var date_from = first_day_in_year.toISOString().split('T')[0];
-                // var date_to = today_date.toISOString().split('T')[0];
+            var firstDay = new Date(y, m, 1);
+            firstDay.setHours(0, 0, 0, 0);
+            lastDay.setHours(0, 0, 0, 0);
 
-                // var start_date = date_from;
-                // var last_date = last_date;
-                var i = 0;
-                var lastDay = new Date(y, m + 1, 0);
-                do {
-                    // months.push(m[parseInt((month > 9 ? "" : "0") + month)] + '-' + year);
-                    if (m == 1) {
-                        m = 12;
-                        y--;
-                    } else {
-                        m--;
-                    }
-                    i++;
-                } while (i < 4);
-
-                var firstDay = new Date(y, m, 1);
-                firstDay.setHours(0, 0, 0, 0);
-                lastDay.setHours(0, 0, 0, 0);
-
-                var start_date = GetFormattedDate(firstDay);
-                var last_date = GetFormattedDate(lastDay);
-            }
+            var start_date = GetFormattedDate(firstDay);
+            var last_date = GetFormattedDate(lastDay);
+            // }
 
             log.debug({
                 title: 'start_date',
@@ -177,7 +177,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             inlineHtml += '</ul></div>';
 
             // Tabs content
-            inlineHtml += '<div class="data-range_note  hide" style="color: red;text-align: center;font-weight: bolder;font-size: 14px;"><i></i></div></br><div class="tab-content">';
+            inlineHtml += '<div class="data-range_note  hide" style="color: red;text-align: center;font-weight: bolder;font-size: 14px;"><i>Please note, the data shown below is moving over a 3-month period.</i></div></br><div class="tab-content">';
             inlineHtml += '<div role="tabpanel" class="tab-pane active" id="monthly_scans">';
             inlineHtml += '<figure class="highcharts-figure">';
             inlineHtml += '<div id="container_monthly"></div>';
